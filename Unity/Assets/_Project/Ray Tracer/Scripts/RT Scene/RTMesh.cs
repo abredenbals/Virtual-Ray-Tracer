@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -155,11 +156,35 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             }
         }
 
+        public enum MeshType
+        {
+            Sphere,
+            Cube,
+            Capsule,
+            Cylinder,
+            Goat,
+            Prism,
+            Other
+        }
         public enum ObjectType
         {
             Opaque,
             Transparent,
             Mirror
+        }
+
+        private MeshType shape = MeshType.Other;
+        /// <summary>
+        /// The shape of the mesh. i.e. sphere, cube, etc. decides the SDF of the object.
+        /// </summary>
+        public MeshType Shape
+        {
+            get => Shape;
+            private set
+            {
+                Shape = value;
+                OnMeshChanged?.Invoke();
+            }
         }
 
         /// <summary>
@@ -219,6 +244,21 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnMeshChanged?.Invoke();
         }
 
+        public Vector3 ClosestSurfacePoint(Vector3 point) //TODO: implement: find closest point on the mesh, to the input point.
+        {
+            return new Vector3(1, 1, 1);
+        }
+
+        public float DistanceToPoint(Vector3 point)
+        {
+            return shape switch
+            {
+                MeshType.Sphere => (point - Position).magnitude - Scale.x,
+                MeshType.Cube => Mathf.Infinity,
+                _ => Mathf.Infinity
+            };
+        }
+
         private void Awake()
         {
             if (StandardShader == null)
@@ -236,6 +276,15 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         private void Initialize()
         {
+            if (Enum.TryParse<MeshType>(GetComponent<MeshCollider>().sharedMesh.name, out shape))
+            {
+                Debug.Log(shape);
+            }
+            else
+            {
+                shape = MeshType.Other;
+                Debug.LogError("Unrecognized Mesh");
+            }
             GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.TwoSided;
             // Find the material used by this object and verify that it uses the correct shader.
             Material = GetComponent<MeshRenderer>().material;

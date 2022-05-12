@@ -9,7 +9,7 @@ namespace _Project.Ray_Tracer.Scripts.RM_Sphere
         public RMSphere Sphere
         {
             get { return sphere; }
-            set { sphere = value; Reset(); }
+            set { sphere = value; }  //Reset(); }
         }
         
         public float DrawRadius { get; private set; }
