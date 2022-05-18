@@ -15,8 +15,8 @@ namespace _Project.UI.Scripts.Control_Panel
     /// </summary>
     public class RayTracerProperties : MonoBehaviour
     {
-        protected UnityRayTracer rayTracer;
-        protected RayManager rayManager;
+        private UnityRayTracer rayTracer;
+        private RayManager rayManager;
         protected UIManager uiManager;
 
         [SerializeField]
@@ -91,7 +91,7 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        private IEnumerator RunRenderImage()
+        protected IEnumerator RunRenderImage()
         {
             yield return new WaitForFixedUpdate();
             Texture2D render = rayTracer.RenderImage();
@@ -99,14 +99,14 @@ namespace _Project.UI.Scripts.Control_Panel
             yield return null;
         }
 
-        private void RenderImage()
+        protected void RenderImage()
         {
             uiManager.RenderedImageWindow.Show();
             uiManager.RenderedImageWindow.SetLoading();
             StartCoroutine(RunRenderImage());
         }
 
-        private void ToggleImage()
+        protected void ToggleImage()
         {
             uiManager.RenderedImageWindow.Toggle();
         }

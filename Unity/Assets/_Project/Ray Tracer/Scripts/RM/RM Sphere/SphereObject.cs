@@ -52,7 +52,6 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
         private void Start()
         {
             rayMarchingManager = RayMarchingManager.RMGet();
-            Debug.Log(rayMarchingManager.name);
         }
 
         private void OnEnable()

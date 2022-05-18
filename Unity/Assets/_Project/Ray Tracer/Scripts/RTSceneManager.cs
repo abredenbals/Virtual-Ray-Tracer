@@ -441,7 +441,6 @@ namespace _Project.Ray_Tracer.Scripts
             
             // Construct the ray tracer scene with the found objects.
             Scene = new RTScene(camera, lights, meshes);
-            Debug.Log(Scene.Lights);
             ControlPanel.Subscribe(OnEvent);
         }
 

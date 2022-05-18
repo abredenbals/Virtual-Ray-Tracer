@@ -411,9 +411,10 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 // Break conditions
                 if (minDist < EpsilonRM)
                 {
-                    distList.Data.Add((totalDist + screenDistance, nearestCollision));
+                    distList.Data.Add((totalDist , nearestCollision));
                     Vector3 normalPlaceholder = origin - nearestObject.Position; //change as soon as other objects are introduced. maybe put it into the distance function
                     hit = new HitInfo(ref origin, ref normalPlaceholder, ref direction, ref nearestObject);
+                    totalDist -= screenDistance;
                     return true;
                 } else if (maxDistance < minDist)
                 {

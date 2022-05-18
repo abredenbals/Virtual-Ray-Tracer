@@ -22,6 +22,52 @@ namespace _Project.Ray_Tracer.Scripts.RM
         private List<TreeNode<List<(float, Vector3)>>> collisionDistances;
         private SphereObjectPool sphereObjectPool;
 
+        // showing/hiding Ray Marching visualizations
+        [SerializeField]
+        protected bool showCollisionIndicators = false;
+        /// <summary>
+        /// Whether this ray manager animates the collision indicators.
+        /// </summary>
+        public bool ShowCollisionIndicators
+        {
+            get { return showCollisionIndicators; }
+            set
+            {
+                Reset = showCollisionIndicators != value; // Reset the animation if we changed the value.
+                showCollisionIndicators = value;
+            }
+        }
+        
+        [SerializeField]
+        protected bool showRMRays = false;
+        /// <summary>
+        /// Whether this ray manager animates the collision indicators.
+        /// </summary>
+        public bool ShowRMRays
+        {
+            get { return showRMRays; }
+            set
+            {
+                Reset = showRMRays != value; // Reset the animation if we changed the value.
+                showRMRays = value;
+            }
+        }
+        
+        [SerializeField]
+        protected bool showRMSpheres = false;
+        /// <summary>
+        /// Whether this ray manager animates the collision indicators.
+        /// </summary>
+        public bool ShowRMSpheres
+        {
+            get { return showRMSpheres; }
+            set
+            {
+                Reset = showRMSpheres != value; // Reset the animation if we changed the value.
+                showRMSpheres = value;
+            }
+        }
+
         public static RayMarchingManager RMGet()
         {
             return instance;
@@ -117,22 +163,28 @@ namespace _Project.Ray_Tracer.Scripts.RM
             Vector3 direction = rayObject.Ray.Direction;
             foreach (var collisionPair in collisionDistance.Data)
             {
-                // The indicator on the ray
                 Vector3 center = origin + direction * collisionPair.Item1;
-                SphereObject sphereObject = sphereObjectPool.GetSphereObject();
-                sphereObject.Sphere = new RMSphere(center, RMSphere.SphereType.RayIndicator);
-                sphereObject.Draw();
+                if (ShowCollisionIndicators)
+                {
+                    // The indicator on the ray
+                    SphereObject sphereObject = sphereObjectPool.GetSphereObject();
+                    sphereObject.Sphere = new RMSphere(center, RMSphere.SphereType.RayIndicator);
+                    sphereObject.Draw();
                 
-                // The indicator on the nearest object
-                sphereObject = sphereObjectPool.GetSphereObject();
-                sphereObject.Sphere = new RMSphere(collisionPair.Item2, RMSphere.SphereType.CollisionIndicator);
-                sphereObject.Draw();
-                
-                // Slim rays connecting the two
-                RayObject connection = rayObjectPool.GetRayObject();
-                connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
-                    RTRay.RayType.Reflect); // add appropriate rayType
-                connection.Draw(RayRadius * 0.5f);
+                    // The indicator on the nearest object
+                    sphereObject = sphereObjectPool.GetSphereObject();
+                    sphereObject.Sphere = new RMSphere(collisionPair.Item2, RMSphere.SphereType.CollisionIndicator);
+                    sphereObject.Draw();
+                }
+
+                if (ShowRMRays)
+                {
+                    // Slim rays connecting the two
+                    RayObject connection = rayObjectPool.GetRayObject();
+                    connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
+                        RTRay.RayType.Reflect); // add appropriate rayType
+                    connection.Draw(RayRadius * 0.5f);
+                }
             }
             
             if (!rayTree.IsLeaf())
@@ -225,29 +277,36 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 // the starting point of this iteration (on the  ray)
                 Vector3 center = origin + direction * collisionPair.Item1;
 
-                // The indicator on the ray
-                SphereObject sphereObject = sphereObjectPool.GetSphereObject();
-                sphereObject.Sphere = new RMSphere(center, RMSphere.SphereType.RayIndicator);
-                sphereObject.Draw();
-                
-                // Slim rays connecting the two
-                RayObject connection = rayObjectPool.GetRayObject();
-                connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
-                    RTRay.RayType.Reflect); // add appropriate rayType
-                connection.Draw(RayRadius * 0.5f, distance - collisionPair.Item1);
+                if (showCollisionIndicators)
+                {
+                    // The indicator on the ray
+                    SphereObject sphereObject = sphereObjectPool.GetSphereObject();
+                    sphereObject.Sphere = new RMSphere(center, RMSphere.SphereType.RayIndicator);
+                    sphereObject.Draw();
+                }
+
+                if (ShowRMRays)
+                {
+                    // Slim rays connecting the two
+                    RayObject connection = rayObjectPool.GetRayObject();
+                    connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
+                        RTRay.RayType.Reflect); // add appropriate rayType
+                    connection.Draw(RayRadius * 0.5f, distance - collisionPair.Item1);
+                }
                 
                 // check, if the collision is near enough to be drawn
                 if (i < collisionDistance.Data.Count - 1 && collisionDistance.Data[i+1].Item1 >= distance)
                 {
                     break;
                 }
-                
 
-                
-                // The indicator on the nearest object
-                sphereObject = sphereObjectPool.GetSphereObject();
-                sphereObject.Sphere = new RMSphere(collisionPair.Item2, RMSphere.SphereType.CollisionIndicator);
-                sphereObject.Draw();
+                if (showCollisionIndicators)
+                {
+                    // The indicator on the nearest object
+                    SphereObject sphereObject = sphereObjectPool.GetSphereObject();
+                    sphereObject.Sphere = new RMSphere(collisionPair.Item2, RMSphere.SphereType.CollisionIndicator);
+                    sphereObject.Draw();
+                }
 
             }
             
@@ -279,7 +338,6 @@ namespace _Project.Ray_Tracer.Scripts.RM
 
             rtSceneManager = RTSceneManager.Get();
             rayMarcher = UnityRayMarcher.RMGet();
-            Debug.Log(rtSceneManager.name);
             
             rtSceneManager.Scene.OnSceneChanged += () => { shouldUpdateRays = true; };
             rayMarcher.OnRayTracerChanged += () => { shouldUpdateRays = true; };
