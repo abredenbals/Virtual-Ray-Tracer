@@ -249,14 +249,20 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             return new Vector3(1, 1, 1);
         }
 
-        public float DistanceToPoint(Vector3 point)
+        public float DistanceToPoint(ref Vector3 point, out Vector3 collision)
         {
-            return shape switch
+            switch (shape)
             {
-                MeshType.Sphere => (point - Position).magnitude - Scale.x,
-                MeshType.Cube => Mathf.Infinity,
-                _ => Mathf.Infinity
-            };
+                case MeshType.Sphere:
+                    Vector3 insideObject = (point - Position).normalized * Scale.x/2;
+                    collision = Position + insideObject;
+                    return Vector3.Distance(point, Position) - Scale.x/2;
+                case MeshType.Cube:
+                    collision = Vector3.zero;
+                    return Mathf.Infinity;
+            }
+            collision = Vector3.zero;
+            return Mathf.Infinity;
         }
 
         private void Awake()
@@ -278,7 +284,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         {
             if (Enum.TryParse<MeshType>(GetComponent<MeshCollider>().sharedMesh.name, out shape))
             {
-                Debug.Log(shape);
             }
             else
             {

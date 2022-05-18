@@ -1,6 +1,8 @@
 using System.Collections;
 using _Project.Ray_Tracer.Scripts;
+using _Project.Ray_Tracer.Scripts.RM;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -13,51 +15,58 @@ namespace _Project.UI.Scripts.Control_Panel
     /// </summary>
     public class RayTracerProperties : MonoBehaviour
     {
-        private UnityRayTracer rayTracer;
-        private RayManager rayManager;
-        private UIManager uiManager;
+        protected UnityRayTracer rayTracer;
+        protected RayManager rayManager;
+        protected UIManager uiManager;
 
         [SerializeField]
-        private BoolEdit renderShadowsEdit;
+        protected BoolEdit renderShadowsEdit;
         [SerializeField]
-        private FloatEdit recursionDepthEdit;
+        protected FloatEdit recursionDepthEdit;
         [SerializeField]
-        private ColorEdit backgroundColorEdit;
+        protected ColorEdit backgroundColorEdit;
 
         [SerializeField]
-        private BoolEdit hideNoHitRaysEdit;
+        protected BoolEdit hideNoHitRaysEdit;
         [SerializeField]
-        private BoolEdit showRaysEdit;
+        protected BoolEdit showRaysEdit;
         [SerializeField]
-        private FloatEdit rayRadiusEdit;
+        protected FloatEdit rayRadiusEdit;
 
         [SerializeField]
-        private BoolEdit animateEdit;
+        protected BoolEdit animateEdit;
         [SerializeField]
-        private BoolEdit animateSequentiallyEdit;
+        protected BoolEdit animateSequentiallyEdit;
         [SerializeField]
-        private BoolEdit loopEdit;
+        protected BoolEdit loopEdit;
         [SerializeField]
-        private FloatEdit speedEdit;
+        protected FloatEdit speedEdit;
 
         [SerializeField]
-        private FloatEdit superSamplingFactorEdit;
+        protected FloatEdit superSamplingFactorEdit;
         [SerializeField]
-        private Button renderImageButton;
+        protected Button renderImageButton;
         [SerializeField]
-        private Button openImageButton;
+        protected Button openImageButton;
 
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
         /// These properties can be changed via the shown UI.
         /// </summary>
-        public void Show()
+        public virtual void Show()
         {
             gameObject.SetActive(true);
-            rayTracer = UnityRayTracer.Get();
-            rayManager = RayManager.Get();
             uiManager = UIManager.Get();
-
+            if (SceneManager.GetActiveScene().name == "Ray Marching")
+            {
+                rayManager = RayMarchingManager.RMGet();
+                rayTracer = UnityRayMarcher.RMGet();
+            }
+            else
+            {
+                rayManager = RayManager.Get();
+                rayTracer = UnityRayTracer.Get();
+            }
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
             recursionDepthEdit.Value = rayTracer.MaxDepth;
             backgroundColorEdit.Color = rayTracer.BackgroundColor;

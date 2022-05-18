@@ -1,6 +1,8 @@
 using _Project.Ray_Tracer.Scripts;
+using _Project.Ray_Tracer.Scripts.RM;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace _Project.UI.Scripts
@@ -133,8 +135,15 @@ namespace _Project.UI.Scripts
             rayTracerImage.OnImageChanged += UpdatePreview;
             rayTracerImage.OnImageChanged += CheckDimensionsChanged;
             
-            rayManager = RayManager.Get();
-
+            if (SceneManager.GetActiveScene().name == "Ray Marching")
+            {
+                rayManager = RayMarchingManager.RMGet();
+            }
+            else
+            {
+                rayManager = RayManager.Get();
+            }
+            
             windowSize = GetComponent<RectTransform>();
 
             hoverImage.enabled = false;

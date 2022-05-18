@@ -23,7 +23,7 @@ namespace _Project.Ray_Tracer.Scripts
         public event RayTracerChanged OnRayTracerChanged;
 
         [SerializeField]
-        private float epsilon = 0.001f;
+        protected float epsilon = 0.001f;
         /// <summary>
         /// A small floating point value used to prevent shadow acne.
         /// </summary>
@@ -38,7 +38,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private bool renderShadows = true;
+        protected bool renderShadows = true;
         /// <summary>
         /// Whether this ray tracer renders shadows.
         /// </summary>
@@ -53,7 +53,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private int maxDepth = 3;
+        protected int maxDepth = 3;
         /// <summary>
         /// The maximum depth of any ray tree produced by this ray tracer.
         /// </summary>
@@ -68,7 +68,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private int superSamplingFactor = 1;
+        protected int superSamplingFactor = 1;
         /// <summary>
         /// The supersampling factor.
         /// </summary>
@@ -83,7 +83,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private Color backgroundColor = Color.black;
+        protected Color backgroundColor = Color.black;
         /// <summary>
         /// The color produced by rays that don't intersect an object.
         /// </summary>
@@ -98,32 +98,32 @@ namespace _Project.Ray_Tracer.Scripts
             }
         }
 
-        static private UnityRayTracer instance = null;
-        private RTSceneManager rtSceneManager;
+        private static UnityRayTracer instance = null;
+        protected RTSceneManager rtSceneManager;
 
-        private RTScene scene;
-        private new RTCamera camera;
+        protected RTScene scene;
+        protected new RTCamera camera;
 
-        private int rayTracerLayer;
+        protected int rayTracerLayer;
 
         /// <summary>
         /// A class that stores the raw mesh data of a collider. This is used to cache a list of recently intersected
         /// meshes.
         /// </summary>
-        private class MeshData
+        protected class MeshData
         {
             public Collider Collider;
             public Vector3[] Normals;
             public int[] Indices;
         }
 
-        private static int cacheCapacity = 8;
-        private static List<MeshData> meshCache = new List<MeshData>(cacheCapacity);
+        protected static int cacheCapacity = 8;
+        protected static List<MeshData> meshCache = new List<MeshData>(cacheCapacity);
 
         /// <summary>
         /// A struct that calculates and stores all relevant information about a ray-object intersection.
         /// </summary>
-        private readonly struct HitInfo 
+        protected readonly struct HitInfo 
         {
             public readonly Vector3 Point;
             public readonly Vector3 View ;
@@ -157,6 +157,33 @@ namespace _Project.Ray_Tracer.Scripts
                 // Interpolate the hit normal to achieve smooth shading.
                 if (mesh.ShadeSmooth)
                     Normal = SmoothedNormal(ref hit);
+                
+                // The shading normal always points in the direction of the view, as required by the Phong illumination
+                // model.
+                InversedNormal = Vector3.Dot(Normal, View) < -0.1f;
+                Normal = InversedNormal ? -Normal : Normal;
+            }
+            
+            public HitInfo(ref Vector3 point, ref Vector3 normal, ref Vector3 direction, ref RTMesh mesh)
+            {
+                Point = point;
+                Normal = normal;
+                View = -direction;
+                InversedNormal = false;
+                
+                // Get the material's properties.
+                Color = mesh.Color;
+                Ambient = mesh.Ambient;
+                Diffuse = mesh.Diffuse;
+                Specular = mesh.Specular;
+                Shininess = mesh.Shininess;
+                RefractiveIndex = mesh.RefractiveIndex;
+                IsTransparent = mesh.Type == RTMesh.ObjectType.Transparent;
+                
+                // Interpolate the hit normal to achieve smooth shading. TODO: Implement for this constructor
+                // if (mesh.ShadeSmooth)
+                //     RaycastHit hit = new RaycastHit();
+                //     Normal = SmoothedNormal(ref hit);
                 
                 // The shading normal always points in the direction of the view, as required by the Phong illumination
                 // model.
@@ -216,7 +243,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// Render the current <see cref="RTSceneManager"/>'s <see cref="RTScene"/> while building up a list of ray trees.
         /// </summary>
         /// <returns> The list of ray trees that were traced to render the image. </returns>
-        public List<TreeNode<RTRay>> Render()
+        public virtual List<TreeNode<RTRay>> Render()
         {
             List<TreeNode<RTRay>> rayTrees = new List<TreeNode<RTRay>>();
             scene = rtSceneManager.Scene;
@@ -264,7 +291,7 @@ namespace _Project.Ray_Tracer.Scripts
             return rayTrees;
         }
 
-        private TreeNode<RTRay> Trace(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
+        protected virtual TreeNode<RTRay> Trace(Vector3 origin, Vector3 direction, int depth, RTRay.RayType type)
         {
             RaycastHit hit;
             bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
@@ -308,7 +335,7 @@ namespace _Project.Ray_Tracer.Scripts
             return rayTree;
         }
 
-        private RTRay TraceLight(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        protected virtual RTRay TraceLight(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point); 
@@ -338,7 +365,7 @@ namespace _Project.Ray_Tracer.Scripts
             return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color), RTRay.RayType.Light);
         }
 
-        private List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
+        protected virtual List<TreeNode<RTRay>> TraceReflectionAndRefraction(int depth, in HitInfo hitInfo)
         {
             List<TreeNode<RTRay>> rays = new List<TreeNode<RTRay>>();
             TreeNode<RTRay> node;
@@ -388,7 +415,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// image.
         /// </summary>
         /// <returns> A high resolution render in the form of a <see cref="Texture2D"/>. </returns>
-        public Texture2D RenderImage()
+        public virtual Texture2D RenderImage()
         {
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
@@ -448,7 +475,7 @@ namespace _Project.Ray_Tracer.Scripts
             return image;
         }
 
-        private Color TraceImage(Vector3 origin, Vector3 direction, int depth)
+        protected virtual Color TraceImage(Vector3 origin, Vector3 direction, int depth)
         {
             RaycastHit hit;
             bool intersected = Physics.Raycast(origin, direction, out hit, Mathf.Infinity, rayTracerLayer);
@@ -478,7 +505,7 @@ namespace _Project.Ray_Tracer.Scripts
             return ClampColor(color);
         }
 
-        private Color TraceLightImage(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        protected virtual Color TraceLightImage(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point);
@@ -506,7 +533,7 @@ namespace _Project.Ray_Tracer.Scripts
             return ClampColor(color);
         }
 
-        private Color TraceReflectionAndRefractionImage(int depth, in HitInfo hitInfo)
+        protected virtual Color TraceReflectionAndRefractionImage(int depth, in HitInfo hitInfo)
         {
             // The object is transparent, and thus refracts and reflects light.
             if (hitInfo.IsTransparent)
@@ -543,7 +570,7 @@ namespace _Project.Ray_Tracer.Scripts
             return Color.black;
         }
 
-        private Vector3 Refract(Vector3 incident, Vector3 normal, float refractiveIndex)
+        protected Vector3 Refract(Vector3 incident, Vector3 normal, float refractiveIndex)
         {
             float inputDot = Vector3.Dot(incident, normal);
             float root = 1.0f - (1.0f - inputDot * inputDot) * refractiveIndex * refractiveIndex;
@@ -552,7 +579,7 @@ namespace _Project.Ray_Tracer.Scripts
             return refraction - normal * Mathf.Sqrt(root);
         }
 
-        private Color ClampColor(Color color)
+        protected Color ClampColor(Color color)
         {
             float r = Mathf.Clamp01(color.r);
             float g = Mathf.Clamp01(color.g);
@@ -566,7 +593,7 @@ namespace _Project.Ray_Tracer.Scripts
             rayTracerLayer = LayerMask.GetMask("Ray Tracer Objects");
         }
 
-        private void Start()
+        protected void Start()
         {
             rtSceneManager = RTSceneManager.Get();
         }

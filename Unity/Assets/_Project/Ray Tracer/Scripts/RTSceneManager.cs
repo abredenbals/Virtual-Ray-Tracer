@@ -429,10 +429,6 @@ namespace _Project.Ray_Tracer.Scripts
         {
             instance = this;
             Image = new RTImage(1, 1);
-        }
-
-        private void Start()
-        {
             transformHandle.gameObject.SetActive(false);
             
             HandleTypeDropdown.onValueChanged.AddListener(type => SetHandleType((HandleType)type));
@@ -445,7 +441,7 @@ namespace _Project.Ray_Tracer.Scripts
             
             // Construct the ray tracer scene with the found objects.
             Scene = new RTScene(camera, lights, meshes);
-            
+            Debug.Log(Scene.Lights);
             ControlPanel.Subscribe(OnEvent);
         }
 

@@ -1,4 +1,6 @@
+using _Project.Ray_Tracer.Scripts.RM;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Ray
 {
@@ -75,12 +77,26 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
 
         private void Start()
         {
-            rayManager = RayManager.Get();
+            if (SceneManager.GetActiveScene().name == "Ray Marching")
+            {
+                rayManager = RayMarchingManager.RMGet();
+            }
+            else
+            {
+                rayManager = RayManager.Get();
+            }
         }
 
         private void OnEnable()
         {
-            rayManager = RayManager.Get();
+            if (SceneManager.GetActiveScene().name == "Ray Marching")
+            {
+                rayManager = RayMarchingManager.RMGet();
+            }
+            else
+            {
+                rayManager = RayManager.Get();
+            }
         }
     }
 }
