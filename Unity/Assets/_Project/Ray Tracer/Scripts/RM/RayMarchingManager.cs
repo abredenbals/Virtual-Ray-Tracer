@@ -276,6 +276,14 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 var collisionPair = collisionDistance.Data[i];
                 // the starting point of this iteration (on the  ray)
                 Vector3 center = origin + direction * collisionPair.Item1;
+                
+                // The expanding sphere visualization
+                if (showRMSpheres && i < collisionDistance.Data.Count - 1 && collisionDistance.Data[i+1].Item1 >= distance)
+                {
+                    SphereObject sphereObject = sphereObjectPool.GetSphereObject();
+                    sphereObject.Sphere = new RMSphere(center, 2 * (distance - collisionDistance.Data[i].Item1), RMSphere.SphereType.ExpandingVisualization);
+                    sphereObject.Draw();
+                }
 
                 if (showCollisionIndicators)
                 {
