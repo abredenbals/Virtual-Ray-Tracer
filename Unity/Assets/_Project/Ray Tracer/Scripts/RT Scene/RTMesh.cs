@@ -22,6 +22,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         private static readonly int shininess = Shader.PropertyToID("_Shininess");
         private static readonly int refractiveIndex = Shader.PropertyToID("_RefractiveIndex");
 
+        private MeshCollider meshCollider;
+
         public delegate void MeshChanged();
         /// <summary>
         /// An event invoked whenever a property of this mesh is changed.
@@ -251,19 +253,29 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
 
         public float DistanceToPoint(ref Vector3 point, out Vector3 collision)
         {
+            Vector3 convertedLocal = transform.InverseTransformPoint(point);
             switch (shape)
             {
                 case MeshType.Sphere:
                     Vector3 insideObject = (point - Position).normalized * Scale.x/2;
                     collision = Position + insideObject;
                     return Vector3.Distance(point, Position) - Scale.x/2;
+                
+                // Taken from https://www.alanzucconi.com/2016/07/01/signed-distance-functions/#part3
                 case MeshType.Cube:
-                    collision = Vector3.zero;
-                    return Mathf.Infinity;
+                    float x = Mathf.Max(point.x - Position.x - Scale.x / 2.0f, Position.x - point.x - Scale.x / 2.0f);
+                    float y = Mathf.Max(point.y - Position.y - Scale.y / 2.0f, Position.y - point.y - Scale.y / 2.0f);
+                    float z = Mathf.Max(point.z - Position.z - Scale.z / 2.0f, Position.z - point.z - Scale.z / 2.0f);
+                    float d = x;
+                    d = Mathf.Max(d,y);
+                    d = Mathf.Max(d,z);
+                    collision = meshCollider.ClosestPointOnBounds(point);
+                    return d;
             }
             collision = Vector3.zero;
             return Mathf.Infinity;
         }
+        
 
         private void Awake()
         {
@@ -282,7 +294,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         /// </summary>
         private void Initialize()
         {
-            if (Enum.TryParse<MeshType>(GetComponent<MeshCollider>().sharedMesh.name, out shape))
+            meshCollider = GetComponent<MeshCollider>();
+            if (Enum.TryParse<MeshType>(meshCollider.sharedMesh.name, out shape))
             {
             }
             else

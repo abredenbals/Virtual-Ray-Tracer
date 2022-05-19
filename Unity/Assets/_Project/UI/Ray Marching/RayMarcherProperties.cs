@@ -1,4 +1,5 @@
-﻿using _Project.Ray_Tracer.Scripts;
+﻿using System.Collections;
+using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RM;
 using _Project.UI.Scripts;
 using _Project.UI.Scripts.Control_Panel;
@@ -69,6 +70,14 @@ namespace _Project.UI.Ray_Marching
             showCollisionIndicatorsEdit.OnValueChanged += (value) => { rayMarchingManager.ShowCollisionIndicators = value; };
             showRMRaysEdit.OnValueChanged += (value) => { rayMarchingManager.ShowRMRays = value; };
             showRMSpheres.OnValueChanged += (value) => { rayMarchingManager.ShowRMSpheres = value; };
+        }
+        
+        protected override IEnumerator RunRenderImage()
+        {
+            yield return new WaitForFixedUpdate();
+            Texture2D render = rayMarcher.RenderImage();
+            uiManager.RenderedImageWindow.SetImageTexture(render);
+            yield return null;
         }
 
         private void Awake()

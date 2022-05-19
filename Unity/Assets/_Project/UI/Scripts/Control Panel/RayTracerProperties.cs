@@ -91,7 +91,7 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        protected IEnumerator RunRenderImage()
+        protected virtual IEnumerator RunRenderImage()
         {
             yield return new WaitForFixedUpdate();
             Texture2D render = rayTracer.RenderImage();
