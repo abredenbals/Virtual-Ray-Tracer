@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using _Project.Ray_Tracer.Scripts;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
-using TreeEditor;
 
 namespace _Project.Ray_Tracer.Scripts.RM
 {
@@ -165,7 +163,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         {
             HitInfo hitInfo;
             float totalDist;
-            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist,out collisionDistances, 25, 99.0f, rayTracerLayer);
+            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist,out collisionDistances, 100, 99.0f, rayTracerLayer);
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
 
             // If we did not hit anything we return a no hit ray whose result color is black.
@@ -221,7 +219,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
                 
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray. TODO: do we show the rayMarch to the lightsource as well?
-                if (RayMarch(shadowOrigin, lightVector, out shadowHit, out totalDist, out _, 25,  lightDistance, rayTracerLayer))
+                if (RayMarch(shadowOrigin, lightVector, out shadowHit, out totalDist, out _, 100,  lightDistance, rayTracerLayer))
                     return new RTRay(hitInfo.Point, lightVector, totalDist, Color.black,
                         RTRay.RayType.Shadow);
             }
@@ -243,7 +241,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         {
             HitInfo hitInfo;
             float totalDist;
-            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist, out _, 25, 99.0f, rayTracerLayer);
+            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist, out _, 100, 99.0f, rayTracerLayer);
 
             // If we did not hit anything we return the background color.
             if (!intersected) return BackgroundColor;
@@ -278,7 +276,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
                 
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray.
-                if (RayMarch(shadowOrigin, lightVector, out _, out _, out _, 25, lightDistance, rayTracerLayer))
+                if (RayMarch(shadowOrigin, lightVector, out _, out _, out _, 100, lightDistance, rayTracerLayer))
                     return Color.black;
             }
 
@@ -390,6 +388,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             List<RTMesh> meshes = scene.Meshes;
             RTMesh nearestObject = meshes[0];
             Vector3 nearestCollision = Vector3.zero;
+            Vector3 normalPlaceholder = Vector3.zero;
             totalDist = 0.0f;
             // Go through iterations until break conditions or max iterations are met.
             for (int iteration = 0; iteration < maxIterations; iteration++)
@@ -412,7 +411,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 if (minDist < EpsilonRM)
                 {
                     distList.Data.Add((totalDist , nearestCollision));
-                    Vector3 normalPlaceholder = origin - nearestObject.Position; //change as soon as other objects are introduced. maybe put it into the distance function
+                    normalPlaceholder = origin - nearestObject.Position; //change as soon as other objects are introduced. maybe put it into the distance function
                     hit = new HitInfo(ref origin, ref normalPlaceholder, ref direction, ref nearestObject);
                     totalDist -= screenDistance;
                     return true;
@@ -425,7 +424,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 origin += minDist * direction; // Move the origin of the ray march
             }
             
-            hit = new HitInfo();
+            hit = new HitInfo(ref origin, ref normalPlaceholder, ref direction, ref nearestObject);
             return false;
         }
         

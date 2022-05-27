@@ -257,20 +257,17 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             switch (shape)
             {
                 case MeshType.Sphere:
-                    Vector3 insideObject = (point - Position).normalized * Scale.x/2;
+                    Vector3 insideObject = (point - Position).normalized * Scale.x/2f;
                     collision = Position + insideObject;
-                    return Vector3.Distance(point, Position) - Scale.x/2;
+                    return Vector3.Distance(point, Position) - Scale.x/2f;
                 
-                // Taken from https://www.alanzucconi.com/2016/07/01/signed-distance-functions/#part3
+                // Taken and corrected from https://www.alanzucconi.com/2016/07/01/signed-distance-functions/#part3
                 case MeshType.Cube:
-                    float x = Mathf.Max(point.x - Position.x - Scale.x / 2.0f, Position.x - point.x - Scale.x / 2.0f);
-                    float y = Mathf.Max(point.y - Position.y - Scale.y / 2.0f, Position.y - point.y - Scale.y / 2.0f);
-                    float z = Mathf.Max(point.z - Position.z - Scale.z / 2.0f, Position.z - point.z - Scale.z / 2.0f);
-                    float d = x;
-                    d = Mathf.Max(d,y);
-                    d = Mathf.Max(d,z);
+                    float x = Mathf.Max(Math.Abs(point.x - Position.x) - Scale.x / 2.0f, 0.0f);
+                    float y = Mathf.Max(Math.Abs(point.y - Position.y) - Scale.y / 2.0f, 0.0f);
+                    float z = Mathf.Max(Math.Abs(point.z - Position.z) - Scale.z / 2.0f, 0.0f);
                     collision = meshCollider.ClosestPointOnBounds(point);
-                    return d;
+                    return Vector3.Magnitude(new Vector3(x, y, z));
             }
             collision = Vector3.zero;
             return Mathf.Infinity;

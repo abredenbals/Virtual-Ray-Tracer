@@ -161,8 +161,10 @@ namespace _Project.Ray_Tracer.Scripts.RM
             // Ray marching specific visualization
             Vector3 origin = rayObject.Ray.Origin;
             Vector3 direction = rayObject.Ray.Direction;
-            foreach (var collisionPair in collisionDistance.Data)
+            for (int i = 0; i < collisionDistance.Data.Count; i++)
+                //foreach (var collisionPair in collisionDistance.Data)
             {
+                var collisionPair = collisionDistance.Data[i]; // Item1 = Distance from the camera, Item2 = collision point
                 Vector3 center = origin + direction * collisionPair.Item1;
                 if (ShowCollisionIndicators)
                 {
@@ -184,6 +186,11 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
                         RTRay.RayType.Reflect); // add appropriate rayType
                     connection.Draw(RayRadius * 0.5f);
+                }
+
+                if (i < collisionDistance.Data.Count - 1)
+                {
+                    DrawArc(center, collisionPair.Item2, origin + direction *collisionDistance.Data[i+1].Item1, 0.05f);
                 }
             }
             
@@ -315,6 +322,11 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     sphereObject.Sphere = new RMSphere(collisionPair.Item2, RMSphere.SphereType.CollisionIndicator);
                     sphereObject.Draw();
                 }
+                
+                if (i < collisionDistance.Data.Count - 1)
+                {
+                    DrawArc(center, collisionPair.Item2, origin + direction *collisionDistance.Data[i+1].Item1, 0.05f);
+                }
 
             }
             
@@ -330,6 +342,33 @@ namespace _Project.Ray_Tracer.Scripts.RM
             foreach (var child in rayTree.Children)
                 done &= DrawRayTreeAnimated(child, leftover);
             return done;
+        }
+
+        private void DrawArc(Vector3 center, Vector3 start, Vector3 finish, float segmentThreshold)
+        {
+            float distance = Vector3.Distance(start,finish);
+            Vector3 arcVector = finish - start;
+            if (distance > segmentThreshold)
+            {
+                Vector3 halfPoint = start + arcVector * 0.5f;
+                float halfPointDistance = Vector3.Distance(halfPoint, center);
+                halfPoint = center + Vector3.Normalize(halfPoint - center) * Vector3.Distance(start, center);
+                
+                // to not make too many arc pieces
+                if (segmentThreshold * 100f <= distance)
+                {
+                    segmentThreshold = distance / 100f;
+                }
+                DrawArc(center ,start,halfPoint,segmentThreshold * 2);
+                DrawArc(center ,halfPoint, finish, segmentThreshold * 2);
+            }
+            else
+            {
+                RayObject arc = rayObjectPool.GetRayObject();
+                arc.Ray = new RTRay(start, arcVector, Vector3.Magnitude(arcVector), new Color(0,0,0),
+                    RTRay.RayType.Reflect); // add appropriate rayType (arcRay)
+                arc.Draw(RayRadius * 0.5f);
+            }
         }
 
         private void Awake()
