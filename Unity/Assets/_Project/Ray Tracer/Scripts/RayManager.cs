@@ -51,13 +51,14 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>
         public bool ShowRays;
 
-        [SerializeField] private Material noHitMaterial;
-        [SerializeField] private Material reflectMaterial;
-        [SerializeField] private Material refractMaterial;
-        [SerializeField] private Material normalMaterial;
-        [SerializeField] private Material shadowMaterial;
-        [SerializeField] private Material lightMaterial;
-        [SerializeField] private Material errorMaterial;
+        [SerializeField] protected Material noHitMaterial;
+        [SerializeField] protected Material reflectMaterial;
+        [SerializeField] protected Material refractMaterial;
+        [SerializeField] protected Material normalMaterial;
+        [SerializeField] protected Material shadowMaterial;
+        [SerializeField] protected Material lightMaterial;
+        [SerializeField] protected Material errorMaterial;
+
 
         [Header("Animation Settings")]
 
@@ -175,7 +176,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// The <see cref="Material"/> for <paramref name="type"/>. The material for <see cref="RTRay.RayType.NoHit"/>
         /// is returned if <paramref name="type"/> is not a recognized <see cref="RTRay.RayType"/>.
         /// </returns>
-        public Material GetRayTypeMaterial(RTRay.RayType type)
+        public virtual Material GetRayTypeMaterial(RTRay.RayType type)
         {
             switch (type)
             {

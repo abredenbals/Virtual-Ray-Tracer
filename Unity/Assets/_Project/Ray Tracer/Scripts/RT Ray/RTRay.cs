@@ -18,7 +18,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Refract,
             Normal,
             Shadow,
-            Light
+            Light,
+            RMCollision,
+            RMArc
         }
 
         /// <summary>

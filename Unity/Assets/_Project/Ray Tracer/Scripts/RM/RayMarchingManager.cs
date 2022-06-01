@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh;
 using _Project.Ray_Tracer.Scripts.RM.RM_Sphere;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
+using SphereObjectPool = _Project.Ray_Tracer.Scripts.RM.RM_Sphere.SphereObjectPool;
 
 namespace _Project.Ray_Tracer.Scripts.RM
 {
@@ -11,16 +14,23 @@ namespace _Project.Ray_Tracer.Scripts.RM
         public bool HideSpheres; // in case there will be too much clutter
         
         [SerializeField] private SphereObject spherePrefab;
+        [SerializeField] private ArcMeshObject arcMeshPrefab;
+        
+        
         [SerializeField] private Material sphereRayMaterial;
         [SerializeField] private Material sphereCollisionMaterial;
         [SerializeField] private Material sphereExpandingMaterial;
         [SerializeField] private Material sphereErrorMaterial;
+        [SerializeField] private Material rmCollisionMaterial;
+        [SerializeField] private Material rmArcMaterial;
+        [SerializeField] private Material rmArcMeshMaterial;
         
         private static RayMarchingManager instance = null;
         private UnityRayMarcher rayMarcher;
         private TreeNode<List<(float, Vector3)>> selectedcollisionDistance;
         private List<TreeNode<List<(float, Vector3)>>> collisionDistances;
         private SphereObjectPool sphereObjectPool;
+        private ArcMeshObjectPool arcMeshObjectPool;
 
         // showing/hiding Ray Marching visualizations
         [SerializeField]
@@ -73,6 +83,11 @@ namespace _Project.Ray_Tracer.Scripts.RM
             return instance;
         }
 
+        public Material GetArcMeshMaterial()
+        {
+            return rmArcMeshMaterial;
+        }
+
         public Material GetSphereMaterial(RMSphere.SphereType type)
         {
             switch (type)
@@ -95,6 +110,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         {
             rayObjectPool.SetAllUnused();
             sphereObjectPool.SetAllUnused();
+            arcMeshObjectPool.SetAllUnused();
             
             if(shouldUpdateRays)
                 UpdateRays();
@@ -115,6 +131,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             
             rayObjectPool.DeactivateUnused();
             sphereObjectPool.DeactivateUnused();
+            arcMeshObjectPool.DeactivateUnused();
         }
         
         public override void UpdateRays()
@@ -184,7 +201,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     // Slim rays connecting the two
                     RayObject connection = rayObjectPool.GetRayObject();
                     connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
-                        RTRay.RayType.Reflect); // add appropriate rayType
+                        RTRay.RayType.RMCollision); 
                     connection.Draw(RayRadius * 0.5f);
                 }
 
@@ -305,7 +322,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     // Slim rays connecting the two
                     RayObject connection = rayObjectPool.GetRayObject();
                     connection.Ray = new RTRay(center, collisionPair.Item2 - center, Vector3.Distance(collisionPair.Item2, center), new Color(0,0,0),
-                        RTRay.RayType.Reflect); // add appropriate rayType
+                        RTRay.RayType.RMCollision);
                     connection.Draw(RayRadius * 0.5f, distance - collisionPair.Item1);
                 }
                 
@@ -365,9 +382,41 @@ namespace _Project.Ray_Tracer.Scripts.RM
             else
             {
                 RayObject arc = rayObjectPool.GetRayObject();
-                arc.Ray = new RTRay(start, arcVector, Vector3.Magnitude(arcVector), new Color(0,0,0),
-                    RTRay.RayType.Reflect); // add appropriate rayType (arcRay)
+                arc.Ray = new RTRay(start, arcVector, Vector3.Magnitude(arcVector), new Color(0, 0, 0),
+                    RTRay.RayType.RMArc);
                 arc.Draw(RayRadius * 0.5f);
+                ArcMeshObject arcMeshObject = arcMeshObjectPool.GetArcMeshObject();
+                Vector3[] vertices = new Vector3[3]{center, finish, start};
+                Mesh arcMesh = new Mesh();
+                arcMesh.vertices = vertices;
+                arcMesh.triangles = new []{0,1,2};
+                arcMeshObject.ArcMesh = arcMesh;
+            }
+        }
+
+        public override Material GetRayTypeMaterial(RTRay.RayType type)
+        {
+            switch (type)
+            {
+                case RTRay.RayType.NoHit:
+                    return noHitMaterial;
+                case RTRay.RayType.Reflect:
+                    return reflectMaterial;
+                case RTRay.RayType.Refract:
+                    return refractMaterial;
+                case RTRay.RayType.Normal:
+                    return normalMaterial;
+                case RTRay.RayType.Shadow:
+                    return shadowMaterial;
+                case RTRay.RayType.Light:
+                    return lightMaterial;
+                case RTRay.RayType.RMCollision:
+                    return rmCollisionMaterial;
+                case RTRay.RayType.RMArc:
+                    return rmArcMaterial;
+                default:
+                    Debug.LogError("Unrecognized ray type " + type + "!");
+                    return errorMaterial;
             }
         }
 
@@ -381,6 +430,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             rays = new List<TreeNode<RTRay>>();
             rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
             sphereObjectPool = new SphereObjectPool(spherePrefab, initialRayPoolSize);
+            arcMeshObjectPool = new ArcMeshObjectPool(arcMeshPrefab, initialRayPoolSize);
             Reset = true;
 
             rtSceneManager = RTSceneManager.Get();
