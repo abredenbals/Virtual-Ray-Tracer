@@ -36,10 +36,10 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
             this.parent = parent;
 
             sphereObjects = new List<SphereObject>(initialAmount);
-            SphereObject sphere;
 
             for (int i = 0; i < initialAmount; ++i)
             {
+                SphereObject sphere;
                 if (parent != null)
                     sphere = Object.Instantiate(spherePrefab, parent);
                 else

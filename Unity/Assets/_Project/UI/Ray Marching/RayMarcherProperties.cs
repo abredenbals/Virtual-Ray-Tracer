@@ -14,6 +14,7 @@ namespace _Project.UI.Ray_Marching
         
         [SerializeField] protected BoolEdit showCollisionIndicatorsEdit;
         [SerializeField] protected BoolEdit showRMRaysEdit;
+        [SerializeField] protected BoolEdit showRMArcsEdit;
         [SerializeField] protected BoolEdit showRMSpheres;
         
         public override void Show()
@@ -40,6 +41,7 @@ namespace _Project.UI.Ray_Marching
             //RM specific
             showCollisionIndicatorsEdit.IsOn = rayMarchingManager.ShowCollisionIndicators;
             showRMRaysEdit.IsOn = rayMarchingManager.ShowRMRays;
+            showRMArcsEdit.IsOn = rayMarchingManager.ShowRMArcs;
             showRMSpheres.IsOn = rayMarchingManager.ShowRMSpheres;
         }
         
@@ -69,6 +71,7 @@ namespace _Project.UI.Ray_Marching
             // RM specific
             showCollisionIndicatorsEdit.OnValueChanged += (value) => { rayMarchingManager.ShowCollisionIndicators = value; };
             showRMRaysEdit.OnValueChanged += (value) => { rayMarchingManager.ShowRMRays = value; };
+            showRMArcsEdit.OnValueChanged += (value) => { rayMarchingManager.ShowRMArcs = value; };
             showRMSpheres.OnValueChanged += (value) => { rayMarchingManager.ShowRMSpheres = value; };
         }
         

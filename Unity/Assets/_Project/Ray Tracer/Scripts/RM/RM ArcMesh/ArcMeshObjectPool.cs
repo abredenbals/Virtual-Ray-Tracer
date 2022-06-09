@@ -24,11 +24,10 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
             this.arcMeshPrefab = arcMeshPrefab;
 
             arcMeshObjects = new List<ArcMeshObject>(initialAmount);
-            ArcMeshObject arcMesh;
 
             for (int i = 0; i < initialAmount; ++i)
             {
-                arcMesh = Object.Instantiate(arcMeshPrefab);
+                var arcMesh = Object.Instantiate(arcMeshPrefab);
 
                 arcMesh.gameObject.SetActive(false);
                 arcMeshObjects.Add(arcMesh);
@@ -93,8 +92,7 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
             }
 
             // If all ray object are already in use we create a new one.
-            ArcMeshObject arcMesh;
-            arcMesh = Object.Instantiate(arcMeshPrefab);
+            var arcMesh = Object.Instantiate(arcMeshPrefab);
 
             arcMeshObjects.Add(arcMesh);
             ++currentlyActive;

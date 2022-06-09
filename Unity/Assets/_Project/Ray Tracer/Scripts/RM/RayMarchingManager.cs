@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh;
 using _Project.Ray_Tracer.Scripts.RM.RM_Sphere;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
@@ -60,6 +61,21 @@ namespace _Project.Ray_Tracer.Scripts.RM
             {
                 Reset = showRMRays != value; // Reset the animation if we changed the value.
                 showRMRays = value;
+            }
+        }
+        
+        [SerializeField]
+        protected bool showRMArcs = false;
+        /// <summary>
+        /// Whether this ray manager animates the collision indicators.
+        /// </summary>
+        public bool ShowRMArcs
+        {
+            get { return showRMArcs; }
+            set
+            {
+                Reset = showRMArcs != value; // Reset the animation if we changed the value.
+                showRMArcs = value;
             }
         }
         
@@ -205,9 +221,23 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     connection.Draw(RayRadius * 0.5f);
                 }
 
-                if (i < collisionDistance.Data.Count - 1)
+                if (showRMArcs && i < collisionDistance.Data.Count - 1)
                 {
-                    DrawArc(center, collisionPair.Item2, origin + direction *collisionDistance.Data[i+1].Item1, 0.05f);
+                    DrawArc(center, collisionPair.Item2, origin + direction *collisionDistance.Data[i+1].Item1, 0.05f, out var arcMeshVertices);
+                    arcMeshVertices.Insert(0, center);
+                    ArcMeshObject arcMeshObject = arcMeshObjectPool.GetArcMeshObject();
+                    arcMeshObject.ArcMesh = new Mesh();
+                    arcMeshObject.ArcMesh.vertices = arcMeshVertices.ToArray();
+                    List<int> triangles = new List<int>();
+                    int numTriangles = arcMeshVertices.Count - 2;
+                    for (int j = 0; j < numTriangles; j++)
+                    {
+                        triangles.Add(0);
+                        triangles.Add(j+1);
+                        triangles.Add(j+2);
+                    }
+
+                    arcMeshObject.ArcMesh.triangles = triangles.ToArray();
                 }
             }
             
@@ -340,9 +370,23 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     sphereObject.Draw();
                 }
                 
-                if (i < collisionDistance.Data.Count - 1)
+                if (showRMArcs && i < collisionDistance.Data.Count - 1)
                 {
-                    DrawArc(center, collisionPair.Item2, origin + direction *collisionDistance.Data[i+1].Item1, 0.05f);
+                    DrawArc(center, collisionPair.Item2, origin + direction *collisionDistance.Data[i+1].Item1, 0.05f, out var arcMeshVertices);
+                    arcMeshVertices.Insert(0, center);
+                    ArcMeshObject arcMeshObject = arcMeshObjectPool.GetArcMeshObject();
+                    arcMeshObject.ArcMesh = new Mesh();
+                    arcMeshObject.ArcMesh.vertices = arcMeshVertices.ToArray();
+                    List<int> triangles = new List<int>();
+                    int numTriangles = arcMeshVertices.Count - 2;
+                    for (int j = 0; j < numTriangles; j++)
+                    {
+                        triangles.Add(0);
+                        triangles.Add(j+1);
+                        triangles.Add(j+2);
+                    }
+
+                    arcMeshObject.ArcMesh.triangles = triangles.ToArray();
                 }
 
             }
@@ -361,10 +405,13 @@ namespace _Project.Ray_Tracer.Scripts.RM
             return done;
         }
 
-        private void DrawArc(Vector3 center, Vector3 start, Vector3 finish, float segmentThreshold)
+        private void DrawArc(Vector3 center, Vector3 start, Vector3 finish, float segmentThreshold, out List<Vector3> arcMeshVertices)
         {
             float distance = Vector3.Distance(start,finish);
             Vector3 arcVector = finish - start;
+            arcMeshVertices = new List<Vector3>();
+            List<Vector3> startVertices;
+            List<Vector3> finishVertices;
             if (distance > segmentThreshold)
             {
                 Vector3 halfPoint = start + arcVector * 0.5f;
@@ -376,21 +423,25 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 {
                     segmentThreshold = distance / 100f;
                 }
-                DrawArc(center ,start,halfPoint,segmentThreshold * 2);
-                DrawArc(center ,halfPoint, finish, segmentThreshold * 2);
+                DrawArc(center ,start,halfPoint,segmentThreshold * 2, out startVertices);
+                DrawArc(center ,halfPoint, finish, segmentThreshold * 2, out finishVertices);
+                arcMeshVertices.AddRange(finishVertices);
+                arcMeshVertices.AddRange(startVertices);
             }
             else
             {
+                arcMeshVertices.Add(finish);
+                arcMeshVertices.Add(start);
                 RayObject arc = rayObjectPool.GetRayObject();
                 arc.Ray = new RTRay(start, arcVector, Vector3.Magnitude(arcVector), new Color(0, 0, 0),
                     RTRay.RayType.RMArc);
                 arc.Draw(RayRadius * 0.5f);
-                ArcMeshObject arcMeshObject = arcMeshObjectPool.GetArcMeshObject();
-                Vector3[] vertices = new Vector3[3]{center, finish, start};
-                Mesh arcMesh = new Mesh();
-                arcMesh.vertices = vertices;
-                arcMesh.triangles = new []{0,1,2};
-                arcMeshObject.ArcMesh = arcMesh;
+                // ArcMeshObject arcMeshObject = arcMeshObjectPool.GetArcMeshObject();
+                // Vector3[] vertices = new Vector3[3]{center, finish, start};
+                // Mesh arcMesh = new Mesh();
+                // arcMesh.vertices = vertices;
+                // arcMesh.triangles = new []{0,1,2};
+                // arcMeshObject.ArcMesh = arcMesh;
             }
         }
 
@@ -427,6 +478,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         
         private void Start()
         {
+            initialRayPoolSize *= 5;
             rays = new List<TreeNode<RTRay>>();
             rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
             sphereObjectPool = new SphereObjectPool(spherePrefab, initialRayPoolSize);

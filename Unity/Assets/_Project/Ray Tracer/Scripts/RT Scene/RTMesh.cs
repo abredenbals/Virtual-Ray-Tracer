@@ -246,31 +246,44 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnMeshChanged?.Invoke();
         }
 
-        public Vector3 ClosestSurfacePoint(Vector3 point) //TODO: implement: find closest point on the mesh, to the input point.
+        public float DistanceToPoint(ref Vector3 point, out Vector3 collision, out Vector3 normal)
         {
-            return new Vector3(1, 1, 1);
-        }
-
-        public float DistanceToPoint(ref Vector3 point, out Vector3 collision)
-        {
-            Vector3 convertedLocal = transform.InverseTransformPoint(point);
+            RaycastHit hit;
+            collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
+            Physics.Raycast(point, collision - point, out hit);
+            normal = hit.normal;
             switch (shape)
             {
                 case MeshType.Sphere:
+                    // doesnt work for ellipsoids
+                    if (Scale.x != Scale.y || Scale.y != Scale.z)
+                    {
+                        break;
+                    }
                     Vector3 insideObject = (point - Position).normalized * Scale.x/2f;
                     collision = Position + insideObject;
+                    normal = point - Position; //smooth normal
                     return Vector3.Distance(point, Position) - Scale.x/2f;
                 
-                // Taken and corrected from https://www.alanzucconi.com/2016/07/01/signed-distance-functions/#part3
+                
                 case MeshType.Cube:
+                    if (Rotation != Vector3.zero)
+                    {
+                        break;
+                    }
+                    // the rotation invariant part unfortunately doesnt work, thus it uses the standard case for that.
+                    /*Quaternion rot = new Quaternion();
+                    rot.SetEulerAngles(Rotation);
+                    Vector3 rotatedPoint = rot * (point - Position) + Position;*/
+                    
+                    // Taken and corrected from https://www.alanzucconi.com/2016/07/01/signed-distance-functions/#part3
                     float x = Mathf.Max(Math.Abs(point.x - Position.x) - Scale.x / 2.0f, 0.0f);
                     float y = Mathf.Max(Math.Abs(point.y - Position.y) - Scale.y / 2.0f, 0.0f);
                     float z = Mathf.Max(Math.Abs(point.z - Position.z) - Scale.z / 2.0f, 0.0f);
-                    collision = meshCollider.ClosestPointOnBounds(point);
                     return Vector3.Magnitude(new Vector3(x, y, z));
             }
-            collision = Vector3.zero;
-            return Mathf.Infinity;
+
+            return Vector3.Distance(point, collision);
         }
         
 

@@ -388,7 +388,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             List<RTMesh> meshes = scene.Meshes;
             RTMesh nearestObject = meshes[0];
             Vector3 nearestCollision = Vector3.zero;
-            Vector3 normalPlaceholder = Vector3.zero;
+            Vector3 nearestNormal = Vector3.zero;
             totalDist = 0.0f;
             // Go through iterations until break conditions or max iterations are met.
             for (int iteration = 0; iteration < maxIterations; iteration++)
@@ -398,12 +398,14 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 foreach (var mesh in meshes)
                 {
                     Vector3 collision;
-                    float distance = mesh.DistanceToPoint(ref origin, out collision);
+                    Vector3 normalPlaceholder;
+                    float distance = mesh.DistanceToPoint(ref origin, out collision, out normalPlaceholder);
                     if (distance < minDist)
                     {
                         minDist = distance;
                         nearestObject = mesh;
                         nearestCollision = collision;
+                        nearestNormal = normalPlaceholder;
                     }
                 }
 
@@ -411,8 +413,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 if (minDist < EpsilonRM)
                 {
                     distList.Data.Add((totalDist , nearestCollision));
-                    normalPlaceholder = origin - nearestObject.Position; //change as soon as other objects are introduced. maybe put it into the distance function
-                    hit = new HitInfo(ref origin, ref normalPlaceholder, ref direction, ref nearestObject);
+                    hit = new HitInfo(ref origin, ref nearestNormal, ref direction, ref nearestObject);
                     totalDist -= screenDistance;
                     return true;
                 } else if (maxDistance < minDist)
@@ -424,7 +425,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 origin += minDist * direction; // Move the origin of the ray march
             }
             
-            hit = new HitInfo(ref origin, ref normalPlaceholder, ref direction, ref nearestObject);
+            hit = new HitInfo(ref origin, ref nearestNormal, ref direction, ref nearestObject);
             return false;
         }
         
