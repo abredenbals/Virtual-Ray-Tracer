@@ -249,11 +249,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         public float DistanceToPoint(ref Vector3 point, out Vector3 collision, out Vector3 normal)
         {
             RaycastHit hit;
-            collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
-            Physics.Raycast(point, collision - point, out hit);
-            normal = hit.normal;
             switch (shape)
             {
+                    
                 case MeshType.Sphere:
                     // doesnt work for ellipsoids
                     if (Scale.x != Scale.y || Scale.y != Scale.z)
@@ -267,6 +265,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 
                 
                 case MeshType.Cube:
+                    collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
+                    Physics.Raycast(point, collision - point, out hit);
+                    normal = hit.normal;
                     if (Rotation != Vector3.zero)
                     {
                         break;
@@ -282,7 +283,10 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     float z = Mathf.Max(Math.Abs(point.z - Position.z) - Scale.z / 2.0f, 0.0f);
                     return Vector3.Magnitude(new Vector3(x, y, z));
             }
-
+            
+            collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
+            Physics.Raycast(point, collision - point, out hit);
+            normal = hit.normal;
             return Vector3.Distance(point, collision);
         }
         
