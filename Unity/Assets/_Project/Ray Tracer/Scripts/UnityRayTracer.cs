@@ -23,7 +23,7 @@ namespace _Project.Ray_Tracer.Scripts
         public event RayTracerChanged OnRayTracerChanged;
 
         [SerializeField]
-        protected float epsilon = 0.001f;
+        protected float epsilon = 0.01f;
         /// <summary>
         /// A small floating point value used to prevent shadow acne.
         /// </summary>
@@ -211,7 +211,6 @@ namespace _Project.Ray_Tracer.Scripts
                 // Prevent excess memory use by limiting the cache capacity.
                 while (meshCache.Count > cacheCapacity)
                     meshCache.RemoveAt(0);
-
                 // Extract local space normals of the triangle we hit.
                 Vector3 n0 = cachedMesh.Normals[cachedMesh.Indices[hit.triangleIndex * 3 + 0]];
                 Vector3 n1 = cachedMesh.Normals[cachedMesh.Indices[hit.triangleIndex * 3 + 1]];

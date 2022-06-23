@@ -184,7 +184,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         
         protected void DrawRayTree(TreeNode<RTRay> rayTree, TreeNode<List<(float, Vector3)>> collisionDistance)
         {
-            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) // TODO: do similar for the indicators below (add checkboxes in gui)
+            if (HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit)
                 return;
 
             RayObject rayObject = rayObjectPool.GetRayObject();
@@ -241,11 +241,13 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 }
             }
             
-            if (!rayTree.IsLeaf())
-            {
-                foreach (var child in rayTree.Children)
-                    DrawRayTree(child);
-            }
+            // if (!rayTree.IsLeaf())
+            // {
+            //     for (int i = 0; i < rayTree.Children.Count; i++)
+            //     {
+            //         DrawRayTree(rayTree.Children[i],collisionDistance.Children[i]);
+            //     }
+            // }
         }
         
         /// <summary>

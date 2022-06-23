@@ -246,6 +246,8 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             OnMeshChanged?.Invoke();
         }
 
+        
+        
         public float DistanceToPoint(ref Vector3 point, out Vector3 collision, out Vector3 normal)
         {
             RaycastHit hit;
@@ -258,16 +260,21 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     {
                         break;
                     }
-                    Vector3 insideObject = (point - Position).normalized * Scale.x/2f;
+                    Vector3 insideObject = (point - Position).normalized * Scale.x/2.0f;
                     collision = Position + insideObject;
-                    normal = point - Position; //smooth normal
-                    return Vector3.Distance(point, Position) - Scale.x/2f;
+                    normal = Vector3.Normalize(point - Position); //smooth normal
+                    return Vector3.Distance(point, collision);
                 
                 
                 case MeshType.Cube:
+                    // Allows for the function call below. TODO: make a RMMesh class, and put this into initialize to only be called once.
+                    if (!meshCollider.convex)
+                    {
+                        meshCollider.convex = true;
+                    }
                     collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
                     Physics.Raycast(point, collision - point, out hit);
-                    normal = hit.normal;
+                    normal = Vector3.Normalize(hit.normal);
                     if (Rotation != Vector3.zero)
                     {
                         break;
@@ -283,10 +290,14 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     float z = Mathf.Max(Math.Abs(point.z - Position.z) - Scale.z / 2.0f, 0.0f);
                     return Vector3.Magnitude(new Vector3(x, y, z));
             }
-            
+            // Allows for the function call below. TODO: make a RMMesh class, and put this into initialize to only be called once.
+            if (!meshCollider.convex)
+            {
+                meshCollider.convex = true;
+            }
             collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
             Physics.Raycast(point, collision - point, out hit);
-            normal = hit.normal;
+            normal = Vector3.Normalize(hit.normal);
             return Vector3.Distance(point, collision);
         }
         

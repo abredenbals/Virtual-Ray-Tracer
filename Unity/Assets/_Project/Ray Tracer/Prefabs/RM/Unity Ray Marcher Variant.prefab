@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2227215486868806024, guid: 8ffccc4a50603f245b4274db166889f7, type: 3}
       propertyPath: m_Name
-      value: Unity Ray Marcher
+      value: Unity Ray Marcher Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2227215486868806031, guid: 8ffccc4a50603f245b4274db166889f7, type: 3}
       propertyPath: m_RootOrder
@@ -80,4 +80,4 @@ MonoBehaviour:
   maxDepth: 3
   superSamplingFactor: 1
   backgroundColor: {r: 0.69803923, g: 0.69803923, b: 0.69803923, a: 1}
-  epsilonRM: 0.01
+  epsilonRM: 0.001

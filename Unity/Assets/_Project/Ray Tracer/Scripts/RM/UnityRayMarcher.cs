@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using _Project.Ray_Tracer.Scripts.RM.RM_Sphere;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
@@ -9,6 +10,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
 {
     public class UnityRayMarcher : UnityRayTracer
     {
+        private const int RM_MAX_ITERATIONS = 250;
         public delegate void RayMarcherChanged();
         /// <summary>
         /// An event invoked whenever a property of this ray marcher is changed.
@@ -16,7 +18,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         public event RayMarcherChanged OnRayMarcherChanged;
         
         [SerializeField]
-        private float epsilonRM = 0.01f;
+        private float epsilonRM = 0.001f;
         /// <summary>
         /// A small floating point value used to find hits with Ray Marching. Needs to be bigger than the Epsilon for shadow Acne.
         /// </summary>
@@ -163,7 +165,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         {
             HitInfo hitInfo;
             float totalDist;
-            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist,out collisionDistances, 100, 99.0f, rayTracerLayer);
+            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist,out collisionDistances, RM_MAX_ITERATIONS, 99.0f, Mathf.Infinity, camera.ScreenDistance);
             TreeNode<RTRay> rayTree = new TreeNode<RTRay>(new RTRay());
 
             // If we did not hit anything we return a no hit ray whose result color is black.
@@ -181,8 +183,12 @@ namespace _Project.Ray_Tracer.Scripts.RM
             {
                 Vector3 lightVector = (light.transform.position - hitInfo.Point).normalized;
 
-                if (Vector3.Dot(hitInfo.Normal,lightVector) >= 0.0f) 
-                    rayTree.AddChild(TraceLight(ref lightVector, light, in hitInfo));
+                if (Vector3.Dot(hitInfo.Normal, lightVector) >= 0.0f)
+                {
+                    rayTree.AddChild(TraceLight(ref lightVector, light, in hitInfo, out TreeNode<List<(float, Vector3)>> distList));
+                    collisionDistances.AddChild(distList);
+                }
+                    
             }
 
             // Cast reflection and refraction rays.
@@ -194,36 +200,37 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     rayTree.AddChild(newRays[i]);
                     collisionDistances.AddChild(ChildIterationList[i]);
                 }
-                //foreach (var ray in newRays)
-
             }
 
             // Add the child ray colors to the parent ray.
             foreach (var child in rayTree.Children)
+            {
                 color += child.Data.Color;
-
+            }
             rayTree.Data = new RTRay(origin, direction, totalDist, ClampColor(color), type);
             return rayTree;
         }
         
-        protected override RTRay TraceLight(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        protected RTRay TraceLight(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo, out TreeNode<List<(float, Vector3)>> distList)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point);
 
+            distList = new TreeNode<List<(float, Vector3)>>(new List<(float, Vector3)>());
             // If we render shadows, check whether a shadow ray first meets the light or an object.
+            Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
             if (RenderShadows)
             {
-                HitInfo shadowHit;
                 float totalDist;
-                Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
+                
                 
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray. TODO: do we show the rayMarch to the lightsource as well?
-                if (RayMarch(shadowOrigin, lightVector, out shadowHit, out totalDist, out _, 100,  lightDistance, rayTracerLayer))
-                    return new RTRay(hitInfo.Point, lightVector, totalDist, Color.black,
+                if (RayMarch(shadowOrigin, lightVector, out _, out totalDist, out distList, RM_MAX_ITERATIONS, lightDistance, lightDistance, 0.0f))
+                    return new RTRay(shadowOrigin, lightVector, totalDist, Color.black,
                         RTRay.RayType.Shadow);
             }
 
+            
             // We either don't render shadows or nothing is between the object and the light source.
             
             // Calculate the color influence of this light.
@@ -234,14 +241,14 @@ namespace _Project.Ray_Tracer.Scripts.RM
             color += Mathf.Pow(Mathf.Max(Vector3.Dot(reflectionVector, hitInfo.View), 0.0f), hitInfo.Shininess) * 
                      hitInfo.Specular * light.Specular * light.Color; // Is
 
-            return new RTRay(hitInfo.Point, lightVector, lightDistance, ClampColor(color), RTRay.RayType.Light);
+            return new RTRay(shadowOrigin, lightVector, lightDistance, ClampColor(color), RTRay.RayType.Light);
         }
         
         protected override Color TraceImage(Vector3 origin, Vector3 direction, int depth)
         {
             HitInfo hitInfo;
             float totalDist;
-            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist, out _, 100, 99.0f, rayTracerLayer);
+            bool intersected = RayMarch(origin, direction, out hitInfo, out totalDist, out _, RM_MAX_ITERATIONS, 99.0f, Mathf.Infinity, camera.ScreenDistance);
 
             // If we did not hit anything we return the background color.
             if (!intersected) return BackgroundColor;
@@ -276,7 +283,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 Vector3 shadowOrigin = hitInfo.Point + Epsilon * hitInfo.Normal;
                 
                 // Trace a ray until we reach the light source. If we hit something return a shadow ray.
-                if (RayMarch(shadowOrigin, lightVector, out _, out _, out _, 100, lightDistance, rayTracerLayer))
+                if (RayMarch(shadowOrigin, lightVector, out _, out _, out _, RM_MAX_ITERATIONS, lightDistance, lightDistance, 0.0f))
                     return Color.black;
             }
 
@@ -336,9 +343,9 @@ namespace _Project.Ray_Tracer.Scripts.RM
             node = Trace(hitInfo.Point + hitInfo.Normal * Epsilon,Vector3.zero,
                 Vector3.Reflect(-hitInfo.View, hitInfo.Normal),
                 depth - 1, RTRay.RayType.Reflect, out collisionDistance);
-            node.Data.Color *= hitInfo.Specular;
-            rays.Add(node);
-            collisionDistances.Add(collisionDistance);
+            // node.Data.Color *= hitInfo.Specular;
+            // rays.Add(node);
+            // collisionDistances.Add(collisionDistance);
             
             return rays;
         }
@@ -381,9 +388,9 @@ namespace _Project.Ray_Tracer.Scripts.RM
         }
         
         private bool RayMarch(Vector3 origin, Vector3 direction, out HitInfo hit, out float totalDist, out TreeNode<List<(float, Vector3)>> distList, int maxIterations,
-            float maxDistance, int layerMask)
+            float maxIterationDistance, float maxTotalDistance, float screenDistance)
         {
-            float screenDistance = camera.ScreenDistance;
+            // initialize some variables
             distList = new TreeNode<List<(float, Vector3)>>(new List<(float, Vector3)>());
             List<RTMesh> meshes = scene.Meshes;
             RTMesh nearestObject = meshes[0];
@@ -408,23 +415,29 @@ namespace _Project.Ray_Tracer.Scripts.RM
                         nearestNormal = normalPlaceholder;
                     }
                 }
-
+                
                 // Break conditions
                 if (minDist < EpsilonRM)
                 {
+                    // a "hit", return the corresponding HitInfo
                     distList.Data.Add((totalDist , nearestCollision));
                     hit = new HitInfo(ref origin, ref nearestNormal, ref direction, ref nearestObject);
                     totalDist -= screenDistance;
                     return true;
-                } else if (maxDistance < minDist)
+                } else if (maxIterationDistance < minDist)
+                {
+                    break;
+                } else if (maxTotalDistance < totalDist)
                 {
                     break;
                 }
+                
+                // preparations for the next iteration.
                 distList.Data.Add((totalDist, nearestCollision));
                 totalDist += minDist;
                 origin += minDist * direction; // Move the origin of the ray march
             }
-            
+            // "no hit" break conditions terminate here.
             hit = new HitInfo(ref origin, ref nearestNormal, ref direction, ref nearestObject);
             return false;
         }
