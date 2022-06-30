@@ -10,6 +10,9 @@ using SphereObjectPool = _Project.Ray_Tracer.Scripts.RM.RM_Sphere.SphereObjectPo
 
 namespace _Project.Ray_Tracer.Scripts.RM
 {
+    /// <summary>
+    /// Manages the visible rays in the Unity scene. Gets new rays from the ray marcher each frame and draws them.
+    /// </summary>
     public class RayMarchingManager:RayManager
     {
         public bool HideSpheres; // in case there will be too much clutter
@@ -17,7 +20,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         [SerializeField] private SphereObject spherePrefab;
         [SerializeField] private ArcMeshObject arcMeshPrefab;
         
-        
+        // ray marching specific materials
         [SerializeField] private Material sphereRayMaterial;
         [SerializeField] private Material sphereCollisionMaterial;
         [SerializeField] private Material sphereExpandingMaterial;
@@ -94,16 +97,29 @@ namespace _Project.Ray_Tracer.Scripts.RM
             }
         }
 
+        /// <summary>
+        /// Get the instance of this RayMarchingManager.
+        /// </summary>
+        /// <returns>instance of this RayMarchingManager</returns>
         public static RayMarchingManager RMGet()
         {
             return instance;
         }
 
+        /// <summary>
+        /// Get the ArcMeshMaterial.
+        /// </summary>
+        /// <returns>ArcMeshMaterial</returns>
         public Material GetArcMeshMaterial()
         {
             return rmArcMeshMaterial;
         }
 
+        /// <summary>
+        /// Get the corresponding SphereMaterial.
+        /// </summary>
+        /// <param name="type">The sphere type</param>
+        /// <returns>the corresponding material</returns>
         public Material GetSphereMaterial(RMSphere.SphereType type)
         {
             switch (type)
@@ -150,6 +166,9 @@ namespace _Project.Ray_Tracer.Scripts.RM
             arcMeshObjectPool.DeactivateUnused();
         }
         
+        /// <summary>
+        /// Get new ray trees from the ray tracer.
+        /// </summary>
         public override void UpdateRays()
         {
             rays = rayMarcher.Render(out collisionDistances);
@@ -240,6 +259,8 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     arcMeshObject.ArcMesh.triangles = triangles.ToArray();
                 }
             }
+            
+            //we dont show reflection and light rays. If enabeled, it works for light rays immediately, but some changes need to be made for reflection/refraction.
             
             // if (!rayTree.IsLeaf())
             // {
@@ -396,6 +417,10 @@ namespace _Project.Ray_Tracer.Scripts.RM
             // If this ray is not at its full length we are not done animating.
             if (leftover <= 0.0f)
                 return false;
+
+            // Remove, if light, reflect and refract rays should be animated. 
+            return true;
+            
             // If this ray is at its full length and has no children we are done animating.
             if (rayTree.IsLeaf())
                 return true;
@@ -447,6 +472,11 @@ namespace _Project.Ray_Tracer.Scripts.RM
             }
         }
 
+        /// <summary>
+        /// Get the corresponding material given the ray type.
+        /// </summary>
+        /// <param name="type">the type of the ray</param>
+        /// <returns>the corresponding material</returns>
         public override Material GetRayTypeMaterial(RTRay.RayType type)
         {
             switch (type)

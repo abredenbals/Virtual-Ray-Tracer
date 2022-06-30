@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
-      value: Show Collision Indicators
+      value: Show Indicator Dots
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362180, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_Pivot.x
@@ -413,7 +413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
-      value: Show Indicator Rays
+      value: Show Indicator Lines
       objectReference: {fileID: 0}
     - target: {fileID: 590595069432362180, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_Pivot.x

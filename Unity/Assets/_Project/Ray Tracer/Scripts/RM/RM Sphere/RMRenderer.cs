@@ -2,13 +2,18 @@
 
 namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
 {
-    
+    /// <summary>
+    /// Renders a sphere used for different visualisations.
+    /// </summary>
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class RMRenderer:MonoBehaviour
     {
         private Vector3 center;
         private float radius;
 
+        /// <summary>
+        /// The center of the sphere.
+        /// </summary>
         public Vector3 Center
         {
             get => center;
@@ -23,6 +28,9 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
             }
         }
 
+        /// <summary>
+        /// The radius of the sphere.
+        /// </summary>
         public float Radius
         {
             get => radius;

@@ -2,6 +2,9 @@
 
 namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
 {
+    /// <summary>
+    /// A Unity object that visually represents the arcs visualisation in ray marching.
+    /// </summary>
     public class ArcMeshObject:MonoBehaviour
     {
         private Vector3[] vertices;
@@ -9,6 +12,9 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         private int[] triangles;
         private Mesh arcMesh;
         
+        /// <summary>
+        /// The ArcMesh that this Object represents.
+        /// </summary>
         public Mesh ArcMesh
         {
             get { return arcMesh; }
@@ -24,6 +30,10 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         private RayMarchingManager rayMarchingManager;
 
 
+        /// <summary>
+        /// Set the vertices that this Mesh consists of.
+        /// </summary>
+        /// <param name="vertices">Array of the vertices</param>
         public void Draw(Vector3[] vertices)
         {
             arcMeshRenderer.Vertices = vertices;

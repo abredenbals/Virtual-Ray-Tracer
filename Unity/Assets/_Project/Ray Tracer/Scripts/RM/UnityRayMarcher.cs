@@ -8,6 +8,12 @@ using _Project.Ray_Tracer.Scripts.Utility;
 
 namespace _Project.Ray_Tracer.Scripts.RM
 {
+    /// <summary>
+    /// A simple ray marcher that can render <see cref="RTScene"/> objects. The <see cref="Render"/> function is not
+    /// efficient as it stores all rays it traces in a list of ray trees. Therefore, this function should only be used
+    /// to produce a relatively small number of rays for the <see cref="RayManager"/> to visualize. For larger images
+    /// (and no ray trees) the <see cref="RenderImage"/> function should be used.
+    /// </summary>
     public class UnityRayMarcher : UnityRayTracer
     {
         private const int RM_MAX_ITERATIONS = 250;
@@ -35,15 +41,30 @@ namespace _Project.Ray_Tracer.Scripts.RM
 
 
         private static UnityRayMarcher instance = null;
+        /// <summary>
+        /// Returns the instance of the ray marcher.
+        /// </summary>
+        /// <returns>instance of the ray marcher</returns>
         public static UnityRayMarcher RMGet()
         {
             return instance;
         }
+        
+        /// <summary>
+        /// Passthrough to the base classes function. 
+        /// </summary>
+        /// <returns></returns>
         public override List<TreeNode<RTRay>> Render()
         {
             return Render(out _);
         }
         
+        /// <summary>
+        /// Render the current <see cref="RTSceneManager"/>'s <see cref="RTScene"/> while building up a list of
+        /// ray trees and ray marching iterations.
+        /// </summary>
+        /// <param name="collisionDistances">Output for the distances of the ray marching iterations.</param>
+        /// <returns>List of the ray trees (to animate).</returns>
         public List<TreeNode<RTRay>> Render(out List<TreeNode<List<(float, Vector3)>>> collisionDistances)
         {
             collisionDistances = new List<TreeNode<List<(float, Vector3)>>>();
@@ -161,6 +182,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         }
         
         //screen to check, if object is behind screen. needs to be added to the other functions as well. TODO: implement
+        
         protected TreeNode<RTRay> Trace(Vector3 origin, Vector3 screen, Vector3 direction, int depth, RTRay.RayType type, out TreeNode<List<(float, Vector3)>> collisionDistances)
         {
             HitInfo hitInfo;

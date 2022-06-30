@@ -2,7 +2,9 @@
 
 namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
 {
-    
+    /// <summary>
+    /// Renders a ArcMesh as a 2D Mesh.
+    /// </summary>
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class ArcMeshRenderer:MonoBehaviour
     {
@@ -11,6 +13,9 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         private int[] triangles;
         private Mesh mesh;
 
+        /// <summary>
+        /// The center is the first vertex added, currently unused.
+        /// </summary>
         public Vector3 Center
         {
             get => center;
@@ -25,12 +30,18 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
             }
         }
 
+        /// <summary>
+        /// The Vertices to render.
+        /// </summary>
         public Vector3[] Vertices
         {
             get => vertices;
             set => vertices = value;
         }
 
+        /// <summary>
+        /// The corresponding Mesh that is created.
+        /// </summary>
         public Mesh AMesh
         {
             get => mesh;

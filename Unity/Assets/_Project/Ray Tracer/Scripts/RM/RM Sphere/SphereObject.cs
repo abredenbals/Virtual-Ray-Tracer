@@ -2,10 +2,16 @@
 
 namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
 {
+    /// <summary>
+    /// A Unity object that visually represents a Sphere.
+    /// </summary>
     public class SphereObject:MonoBehaviour
     {
         private RMSphere sphere;
 
+        /// <summary>
+        /// The <see cref="RMSphere"/>.
+        /// </summary>
         public RMSphere Sphere
         {
             get { return sphere; }
@@ -20,11 +26,18 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
         private RMRenderer rmRenderer;
         private RayMarchingManager rayMarchingManager;
 
+        /// <summary>
+        /// Renders the current Sphere.
+        /// </summary>
         public void Draw()
         {
             rmRenderer.Radius = DrawRadius;
         }
 
+        /// <summary>
+        /// Render with custom radius.
+        /// </summary>
+        /// <param name="radius">the radius of the sphere.</param>
         public void Draw(float radius)
         {
             rmRenderer.Radius = Mathf.Clamp(radius, 0.0f, DrawRadius);

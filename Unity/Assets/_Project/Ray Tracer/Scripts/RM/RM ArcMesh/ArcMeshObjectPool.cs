@@ -5,7 +5,7 @@ using UnityEngine;
 namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
 {
     /// <summary>
-    /// Class thats purpose is holding a number of spheres for collision indication ready to use.
+    /// Class thats purpose is holding a number of arcMeshes for visualisation ready to use.
     /// </summary>
     public class ArcMeshObjectPool
     {
@@ -15,7 +15,7 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         private int currentlyUsed;
 
         /// <summary>
-        /// Construct a new pool of <see cref="ArcMeshObjects"/>s. All instantiated objects start inactive.
+        /// Construct a new pool of <see cref="ArcMeshObject"/>s. All instantiated objects start inactive.
         /// </summary>
         /// <param name="arcMeshPrefab"> The <see cref="ArcMeshObject"/> prefab to be instantiated by this pool. </param>
         /// <param name="initialAmount"> The initial amount of <see cref="ArcMeshObject"/>s to instantiate. </param>
@@ -38,7 +38,7 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         }
 
         /// <summary>
-        /// Deactivate all <see cref="RayObject"/>s in this pool. This also marks the objects as unused.
+        /// Deactivate all <see cref="ArcMeshObject"/>s in this pool. This also marks the objects as unused.
         /// </summary>
         public void DeactivateAll()
         {
@@ -50,7 +50,7 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         }
 
         /// <summary>
-        /// Deactivate all unused <see cref="RayObject"/>s in this pool.
+        /// Deactivate all unused <see cref="ArcMeshObject"/>s in this pool.
         /// </summary>
         public void DeactivateUnused()
         {
@@ -61,7 +61,7 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         }
 
         /// <summary>
-        /// Mark all <see cref="RayObject"/>s in this pool unused. This does not mean they are deactivated, but they
+        /// Mark all <see cref="ArcMeshObject"/>s in this pool unused. This does not mean they are deactivated, but they
         /// will be returned by <see cref="GetArcMeshObject"/>. The intended usage is to first call this function, then get
         /// the objects you need using <see cref="GetArcMeshObject"/> and finally deactivate all unused objects left active
         /// by calling <see cref="DeactivateUnused"/>.
@@ -72,18 +72,18 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
         }
 
         /// <summary>
-        /// Get an unused <see cref="RayObject"/> from the pool and, if necessary, activate it. If there are no unused
+        /// Get an unused <see cref="ArcMeshObject"/> from the pool and, if necessary, activate it. If there are no unused
         /// objects in the pool a new one will be instantiated and returned.
         /// </summary>
-        /// <returns> An unused activated <see cref="RayObject"/> from the pool. </returns>
+        /// <returns> An unused activated <see cref="ArcMeshObject"/> from the pool. </returns>
         public ArcMeshObject GetArcMeshObject()
         {
 
-            // First try to get unused but already active ray objects from the pool.
+            // First try to get unused but already active ArcMeshObjects from the pool.
             if (currentlyUsed < currentlyActive)
                 return arcMeshObjects[currentlyUsed++];
 
-            // Otherwise we get the first unused ray object and activate it.
+            // Otherwise we get the first unused ArcMeshObject and activate it.
             if (currentlyUsed < arcMeshObjects.Count)
             {
                 arcMeshObjects[currentlyUsed].gameObject.SetActive(true);
@@ -91,7 +91,7 @@ namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
                 return arcMeshObjects[currentlyUsed++];
             }
 
-            // If all ray object are already in use we create a new one.
+            // If all ArcMeshObjects are already in use we create a new one.
             var arcMesh = Object.Instantiate(arcMeshPrefab);
 
             arcMeshObjects.Add(arcMesh);
