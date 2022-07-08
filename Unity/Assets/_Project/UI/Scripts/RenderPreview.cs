@@ -1,5 +1,5 @@
 using _Project.Ray_Tracer.Scripts;
-using _Project.Ray_Tracer.Scripts.RM;
+using _Project.Ray_Tracer.Scripts.Ray_Marching;
 using _Project.Ray_Tracer.Scripts.Utility;
 using System;
 using UnityEngine;

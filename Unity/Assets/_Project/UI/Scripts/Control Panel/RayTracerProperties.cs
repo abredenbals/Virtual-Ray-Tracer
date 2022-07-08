@@ -1,7 +1,7 @@
 using System.Collections;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Scripts;
-using _Project.Ray_Tracer.Scripts.RM;
+using _Project.Ray_Tracer.Scripts.Ray_Marching;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;

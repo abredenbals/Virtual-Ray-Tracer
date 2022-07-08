@@ -1,6 +1,6 @@
-using _Project.Ray_Tracer.Scripts.RM;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using _Project.Ray_Tracer.Scripts.Ray_Marching;
 
 namespace _Project.Ray_Tracer.Scripts.RT_Ray
 {
