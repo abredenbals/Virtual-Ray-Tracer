@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching.RM_ArcMesh
 {
     /// <summary>
     /// A Unity object that visually represents the arcs visualisation in ray marching.

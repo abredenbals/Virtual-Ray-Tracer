@@ -19,7 +19,7 @@ namespace _Project.UI.Scripts.Control_Panel
         private UnityRayTracer rayTracer;
         private RayManager rayManager;
         protected UIManager uiManager;
-        private RTSceneManager rtSceneManager;
+        protected RTSceneManager rtSceneManager;
 
         [SerializeField]
         protected BoolEdit renderShadowsEdit;
@@ -29,7 +29,7 @@ namespace _Project.UI.Scripts.Control_Panel
         protected ColorEdit backgroundColorEdit;
 
         [SerializeField]
-        private BoolEdit showRaysEdit;
+        protected BoolEdit showRaysEdit;
         [SerializeField]
         protected BoolEdit hideNoHitRaysEdit;
         [SerializeField]

@@ -204,13 +204,13 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private bool showRays = true;
+        protected bool showRays = true;
 
         /// <summary>
         /// Whether this ray manager hides all rays it would normally draw. When this is <c>false</c>, all ray drawing
         /// and animation code will be skipped.
         /// </summary>
-        public bool ShowRays
+        public virtual bool ShowRays
         {
             get => showRays;
             set
@@ -314,7 +314,7 @@ namespace _Project.Ray_Tracer.Scripts
         private static RayManager instance = null;
 
         protected List<TreeNode<RTRay>> rays;
-        protected RayObjectPool rayObjectPool;
+        private RayObjectPool rayObjectPool;
 
         protected TreeNode<RTRay> selectedRay;
         protected Vector2Int selectedRayCoordinates;
@@ -415,7 +415,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// The <see cref="Material"/> for <paramref name="type"/>. The material for <see cref="RTRay.RayType.NoHit"/>
         /// is returned if <paramref name="type"/> is not a recognized <see cref="RTRay.RayType"/>.
         /// </returns>
-        private Material GetRayTypeMaterial(RTRay.RayType type)
+        protected virtual Material GetRayTypeMaterial(RTRay.RayType type)
         {
             switch (type)
             {

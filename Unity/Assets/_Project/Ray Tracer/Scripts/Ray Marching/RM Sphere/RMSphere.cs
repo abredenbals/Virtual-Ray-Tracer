@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching.RM_Sphere
 {
     public class RMSphere
     {

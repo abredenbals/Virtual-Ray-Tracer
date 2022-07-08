@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using _Project.Ray_Tracer.Scripts.RT_Ray;
 using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching.RM_ArcMesh
 {
     /// <summary>
     /// Class thats purpose is holding a number of arcMeshes for visualisation ready to use.

@@ -129,7 +129,7 @@ namespace _Project.Ray_Tracer.Scripts
 
         static private UnityRayTracer instance = null;
         protected RTSceneManager rtSceneManager;
-        private Texture2D image;
+        protected Texture2D image;
         public Texture2D Image { get => image; }
 
         protected RTScene scene;
@@ -545,7 +545,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// Render the current <see cref="RTSceneManager"/>'s <see cref="RTScene"/> while building up a "high resolution"
         /// image. Saved in <see cref="UnityRayTracer.Image"/>.
         /// </summary>
-        public IEnumerator RenderImage()
+        public virtual IEnumerator RenderImage()
         {
             RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;

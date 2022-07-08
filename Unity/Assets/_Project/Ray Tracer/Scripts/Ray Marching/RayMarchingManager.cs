@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh;
-using _Project.Ray_Tracer.Scripts.RM.RM_Sphere;
+﻿using System.Collections.Generic;
+using _Project.Ray_Tracer.Scripts.Ray_Marching.RM_ArcMesh;
+using _Project.Ray_Tracer.Scripts.Ray_Marching.RM_Sphere;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
-using SphereObjectPool = _Project.Ray_Tracer.Scripts.RM.RM_Sphere.SphereObjectPool;
+using SphereObjectPool = _Project.Ray_Tracer.Scripts.Ray_Marching.RM_Sphere.SphereObjectPool;
 
-namespace _Project.Ray_Tracer.Scripts.RM
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching
 {
     /// <summary>
     /// Manages the visible rays in the Unity scene. Gets new rays from the ray marcher each frame and draws them.
@@ -35,6 +33,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         private List<TreeNode<List<(float, Vector3)>>> collisionDistances;
         private SphereObjectPool sphereObjectPool;
         private ArcMeshObjectPool arcMeshObjectPool;
+        private RayObjectPool_old rayObjectPool;
 
         // showing/hiding Ray Marching visualizations
         [SerializeField]
@@ -49,6 +48,19 @@ namespace _Project.Ray_Tracer.Scripts.RM
             {
                 Reset = showCollisionIndicators != value; // Reset the animation if we changed the value.
                 showCollisionIndicators = value;
+            }
+        }
+        
+        /// <summary>
+        /// This can be deleted again once the new rayObjectPool is implemented for Ray Marching.
+        /// </summary>
+        public override bool ShowRays
+        {
+            get => showRays;
+            set
+            {
+                if (value == showRays) return;
+                showRays = value;
             }
         }
         
@@ -421,15 +433,15 @@ namespace _Project.Ray_Tracer.Scripts.RM
             // Remove, if light, reflect and refract rays should be animated. 
             return true;
             
-            // If this ray is at its full length and has no children we are done animating.
-            if (rayTree.IsLeaf())
-                return true;
-
-            // Otherwise we start animating the children.
-            bool done = true;
-            foreach (var child in rayTree.Children)
-                done &= DrawRayTreeAnimated(child, leftover);
-            return done;
+            // // If this ray is at its full length and has no children we are done animating.
+            // if (rayTree.IsLeaf())
+            //     return true;
+            //
+            // // Otherwise we start animating the children.
+            // bool done = true;
+            // foreach (var child in rayTree.Children)
+            //     done &= DrawRayTreeAnimated(child, leftover);
+            // return done;
         }
 
         private void DrawArc(Vector3 center, Vector3 start, Vector3 finish, float segmentThreshold, out List<Vector3> arcMeshVertices)
@@ -463,12 +475,6 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 arc.Ray = new RTRay(start, arcVector, Vector3.Magnitude(arcVector), new Color(0, 0, 0),
                     RTRay.RayType.RMArc);
                 arc.Draw(RayRadius * 0.5f);
-                // ArcMeshObject arcMeshObject = arcMeshObjectPool.GetArcMeshObject();
-                // Vector3[] vertices = new Vector3[3]{center, finish, start};
-                // Mesh arcMesh = new Mesh();
-                // arcMesh.vertices = vertices;
-                // arcMesh.triangles = new []{0,1,2};
-                // arcMeshObject.ArcMesh = arcMesh;
             }
         }
 
@@ -477,7 +483,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         /// </summary>
         /// <param name="type">the type of the ray</param>
         /// <returns>the corresponding material</returns>
-        public override Material GetRayTypeMaterial(RTRay.RayType type)
+        protected override Material GetRayTypeMaterial(RTRay.RayType type)
         {
             switch (type)
             {
@@ -490,8 +496,10 @@ namespace _Project.Ray_Tracer.Scripts.RM
                 case RTRay.RayType.Normal:
                     return normalMaterial;
                 case RTRay.RayType.Shadow:
+                case RTRay.RayType.AreaShadow:
                     return shadowMaterial;
                 case RTRay.RayType.Light:
+                case RTRay.RayType.AreaLight:
                     return lightMaterial;
                 case RTRay.RayType.RMCollision:
                     return rmCollisionMaterial;
@@ -512,7 +520,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
         {
             initialRayPoolSize *= 5;
             rays = new List<TreeNode<RTRay>>();
-            rayObjectPool = new RayObjectPool(rayPrefab, initialRayPoolSize, transform);
+            rayObjectPool = new RayObjectPool_old(rayPrefab, initialRayPoolSize, transform);
             sphereObjectPool = new SphereObjectPool(spherePrefab, initialRayPoolSize);
             arcMeshObjectPool = new ArcMeshObjectPool(arcMeshPrefab, initialRayPoolSize);
             Reset = true;

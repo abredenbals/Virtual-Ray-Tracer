@@ -1,12 +1,14 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using _Project.Ray_Tracer.Scripts.RM.RM_Sphere;
+﻿using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.RT_Scene;
 using _Project.Ray_Tracer.Scripts.RT_Scene.RT_Light;
 using _Project.Ray_Tracer.Scripts.Utility;
+using _Project.UI.Scripts;
+using _Project.UI.Scripts.Render_Image_Window;
+using System.Collections;
+using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RM
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching
 {
     /// <summary>
     /// A simple ray marcher that can render <see cref="RTScene"/> objects. The <see cref="Render"/> function is not
@@ -121,8 +123,9 @@ namespace _Project.Ray_Tracer.Scripts.RM
         /// image.
         /// </summary>
         /// <returns> A high resolution render in the form of a <see cref="Texture2D"/>. </returns>
-        public override Texture2D RenderImage()
+        public override IEnumerator RenderImage()
         {
+            RenderedImageWindow renderedImageWindow = UIManager.Get().RenderedImageWindow;
             scene = rtSceneManager.Scene;
             camera = scene.Camera;
             
@@ -135,7 +138,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             width = scaleFactor * width;
             height = scaleFactor * height;
             
-            Texture2D image = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            image = new Texture2D(width, height, TextureFormat.RGBA32, false);
             
             // Calculate the other variables.
             float halfScreenHeight = camera.ScreenDistance * Mathf.Tan(Mathf.Deg2Rad * camera.FieldOfView / 2.0f);
@@ -145,7 +148,8 @@ namespace _Project.Ray_Tracer.Scripts.RM
             int superSamplingSquared = SuperSamplingFactor * SuperSamplingFactor;
             Vector3 origin = camera.transform.position;
 
-            // Trace a ray for each pixel.
+            // Trace(March) a ray for each pixel.
+            int percentage = 0;
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
@@ -175,10 +179,18 @@ namespace _Project.Ray_Tracer.Scripts.RM
                     color.a = 1.0f;
                     image.SetPixel(x, y, ClampColor(color));
                 }
+                
+                // Update progress bar
+                if (100 * y / height > percentage) // Update only when the percentage changes to limit yields.
+                {
+                    percentage = 100 * y / height;
+                    renderedImageWindow.UpdateProgressBar(percentage);
+                    yield return null; // yield to update UI and give the ability to cancel
+                }
             }
 
             image.Apply(); // Very important.
-            return image;
+            yield return null;
         }
         
         //screen to check, if object is behind screen. needs to be added to the other functions as well. TODO: implement
@@ -201,7 +213,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components.
-            foreach (RTLight light in scene.Lights)
+            foreach (RTLight light in scene.PointLights)
             {
                 Vector3 lightVector = (light.transform.position - hitInfo.Point).normalized;
 
@@ -279,7 +291,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             Color color = hitInfo.Ambient * hitInfo.Color;
 
             // Add diffuse and specular components.
-            foreach (RTLight light in scene.Lights)
+            foreach (RTLight light in scene.PointLights)
             {
                 Vector3 lightVector = (light.transform.position - hitInfo.Point).normalized;
 
@@ -294,7 +306,7 @@ namespace _Project.Ray_Tracer.Scripts.RM
             return ClampColor(color);
         }
         
-        protected override Color TraceLightImage(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
+        protected Color TraceLightImage(ref Vector3 lightVector, RTLight light, in HitInfo hitInfo)
         {
             // Determine the distance to the light source. Note the clever use of the dot product.
             float lightDistance = Vector3.Dot(lightVector, light.transform.position - hitInfo.Point);

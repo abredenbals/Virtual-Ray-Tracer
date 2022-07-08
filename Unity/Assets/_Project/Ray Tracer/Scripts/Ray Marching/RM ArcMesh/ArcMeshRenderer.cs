@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RM.RM_ArcMesh
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching.RM_ArcMesh
 {
     /// <summary>
     /// Renders a ArcMesh as a 2D Mesh.

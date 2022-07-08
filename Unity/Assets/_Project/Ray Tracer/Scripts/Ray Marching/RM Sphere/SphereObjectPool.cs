@@ -2,7 +2,7 @@
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using UnityEngine;
 
-namespace _Project.Ray_Tracer.Scripts.RM.RM_Sphere
+namespace _Project.Ray_Tracer.Scripts.Ray_Marching.RM_Sphere
 {
     /// <summary>
     /// Class thats purpose is holding a number of spheres for collision indication ready to use.
