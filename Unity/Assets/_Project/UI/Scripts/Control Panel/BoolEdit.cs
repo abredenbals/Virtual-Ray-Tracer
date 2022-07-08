@@ -100,7 +100,7 @@ namespace _Project.UI.Scripts.Control_Panel
             toggle.onValueChanged.AddListener(delegate { CheckToggleValueChanged(); });
 
 
-            // Update interactability based on serialized value in inspector.
+            // Update intractability based on serialized value in inspector.
             Interactable = interactable;
 
             TooltipTrigger tooltipTrigger = title.GetComponent<TooltipTrigger>();

@@ -21,6 +21,9 @@ namespace _Project.Ray_Tracer.Scripts.RT_Ray
             Light,
             AreaShadow,
             AreaLight
+            Light,
+            RMCollision,
+            RMArc
         }
 
         /// <summary>

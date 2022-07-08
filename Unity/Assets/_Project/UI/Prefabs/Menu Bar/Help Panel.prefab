@@ -631,6 +631,7 @@ RectTransform:
   - {fileID: 4975924918171592756}
   - {fileID: 5325865822218716331}
   - {fileID: 351620982689000016}
+  - {fileID: 7433425303150785671}
   - {fileID: 7593597518852531620}
   m_Father: {fileID: 4036496605459777967}
   m_RootOrder: 0
@@ -1585,7 +1586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1750,6 +1751,224 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
   m_PrefabInstance: {fileID: 5165893209586921062}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5330508070756433733
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8049757883994041652}
+    m_Modifications:
+    - target: {fileID: 1085382269616243585, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Name
+      value: Ray Marching Help
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 357
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 186.49994
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -128.99994
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3712290806099628232, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_text
+      value: 'Ray Marching is an iterative technique to find the (first) collision
+        of the ray in a scene. This is done by iteratively computing the distance
+        between the starting point and each object in the scene using their respecting
+        signed distance functions (SDF). The starting point is initially the point
+        of the camera and then, for each iteration, moves in the direction of the
+        ray as far as the nearest objects distance is. This ensures that the new
+        starting point is not inside objects or misses the a collision of the ray.
+
+        The
+        iterations are repeated until either, the distance of the next step is larger
+        than a certain threshold, meaning that the current starting point is very
+        far away form any object in the scene, which is then classified as "no hit
+        ray". The other option is that the distance of the next iteration is smaller
+        than a very small value, at which point the current location is taken as
+        a point of collision.
+
+        
+
+        A big advantage of this approach
+        is the usage of SDFs, which are object specific and always return the distance
+        of a input point to the nearest point on its surface. A 0 means, the point
+        is exactly on the surface of the object and negative values mean, that the
+        point is inside the object. Such a SDF can be found for every arbitrary object
+        shape, which makes this approach robust compared to, for example, implicit
+        equations which do not exist for every possible shape (such as toruses).
+
+        
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3712290806099628232, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_isRightToLeft
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957366317052489294, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957366317052489294, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957366317052489294, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957366317052489294, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5267256765604759227, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_text
+      value: Ray Marching
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496815340918328095, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496815340918328095, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496815340918328095, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496815340918328095, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 197.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5496815340918328095, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6334901761602653848, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585176498867085637, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585176498867085637, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585176498867085637, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585176498867085637, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585176498867085637, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7981234557612642306, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 420.25
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+--- !u!224 &7433425303150785671 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3373495415687728066, guid: 4492db671b458b745b5c53fefa725067, type: 3}
+  m_PrefabInstance: {fileID: 5330508070756433733}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7113755724626559083
 PrefabInstance:

@@ -182,11 +182,11 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private RayObject rayPrefab;
+        protected RayObject rayPrefab;
         [SerializeField]
         private RayObject areaRayPrefab;
         [Range(0, 1024)]
-        private int initialRayPoolSize = 64;
+        protected int initialRayPoolSize = 64;
 
         private bool hideNoHitRays = false;
         /// <summary>
@@ -227,25 +227,25 @@ namespace _Project.Ray_Tracer.Scripts
         /// </summary>            
         private void ReloadMaterials() => rayObjectPool.ReloadMaterials();
 
-        [SerializeField] private Material noHitMaterial;
-        [SerializeField] private Material reflectMaterial;
-        [SerializeField] private Material reflectMaterialTransparent;
-        [SerializeField] private Material refractMaterial;
-        [SerializeField] private Material refractMaterialTransparent;
-        [SerializeField] private Material normalMaterial;
-        [SerializeField] private Material normalMaterialTransparent;
-        [SerializeField] private Material shadowMaterial;
-        [SerializeField] private Material shadowMaterialTransparent;
-        [SerializeField] private Material lightMaterial;
-        [SerializeField] private Material lightMaterialTransparent;
-        [SerializeField] private Material colorRayMaterial;
-        [SerializeField] private Material colorRayMaterialTransparent;
-        [SerializeField] private Material errorMaterial;
+        [SerializeField] protected Material noHitMaterial;
+        [SerializeField] protected Material reflectMaterial;
+        [SerializeField] protected Material reflectMaterialTransparent;
+        [SerializeField] protected Material refractMaterial;
+        [SerializeField] protected Material refractMaterialTransparent;
+        [SerializeField] protected Material normalMaterial;
+        [SerializeField] protected Material normalMaterialTransparent;
+        [SerializeField] protected Material shadowMaterial;
+        [SerializeField] protected Material shadowMaterialTransparent;
+        [SerializeField] protected Material lightMaterial;
+        [SerializeField] protected Material lightMaterialTransparent;
+        [SerializeField] protected Material colorRayMaterial;
+        [SerializeField] protected Material colorRayMaterialTransparent;
+        [SerializeField] protected Material errorMaterial;
 
         [Header("Animation Settings")]
 
         [SerializeField]
-        private bool animate = false;
+        protected bool animate = false;
         /// <summary>
         /// Whether this ray manager animates the rays it draws.
         /// </summary>
@@ -262,7 +262,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private bool animateSequentially = false;
+        protected bool animateSequentially = false;
         /// <summary>
         /// Whether this ray manager animates the rays sequentially. Does nothing if <see cref="Animate"/> is not set.
         /// </summary>
@@ -278,7 +278,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private bool loop = false;
+        protected bool loop = false;
         /// <summary>
         /// Whether this ray manager loops its animation. Does nothing if <see cref="Animate"/> is not set.
         /// </summary>
@@ -289,7 +289,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField]
-        private bool reset = false;
+        protected bool reset = false;
         /// <summary>
         /// Whether this ray manager will reset its animation on the next frame. After resetting this variable will be
         /// set to <c>false</c> again. Does nothing if <see cref="Animate"/> is not set.
@@ -301,7 +301,7 @@ namespace _Project.Ray_Tracer.Scripts
         }
 
         [SerializeField, Range(0.0f, 10.0f)]
-        private float speed = 2.0f;
+        protected float speed = 2.0f;
         /// <summary>
         /// The speed of this ray manager's animation. Does nothing if <see cref="Animate"/> is not set.
         /// </summary>
@@ -313,20 +313,21 @@ namespace _Project.Ray_Tracer.Scripts
 
         private static RayManager instance = null;
 
-        private List<TreeNode<RTRay>> rays;
-        private RayObjectPool rayObjectPool;
+        protected List<TreeNode<RTRay>> rays;
+        protected RayObjectPool rayObjectPool;
 
-        private TreeNode<RTRay> selectedRay;
-        private Vector2Int selectedRayCoordinates;
-        private bool hasSelectedRay = false;
+        protected TreeNode<RTRay> selectedRay;
+        protected Vector2Int selectedRayCoordinates;
+        protected bool hasSelectedRay = false;
 
-        private RTSceneManager rtSceneManager;
+        protected RTSceneManager rtSceneManager;
         private UnityRayTracer rayTracer;
         
-        private float distanceToDraw = 0.0f;
-        private int rayTreeToDraw = 0; // Used when animating sequentially.
-        private bool animationDone = false;
+        protected float distanceToDraw = 0.0f;
+        protected int rayTreeToDraw = 0; // Used when animating sequentially.
+        protected bool animationDone = false;
 
+        protected bool shouldUpdateRays = true; // might be necessary for the ray marching sub-class
         //private bool shouldUpdateRays = true;
 
         //private bool ShouldUpdateRays
@@ -564,7 +565,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// Get new ray trees from the ray tracer.
         /// </summary>
-        public void UpdateRays()
+        public virtual void UpdateRays()
         {
             rays = rayTracer.Render();
             rayObjectPool.MakeRayObjects(rays);
@@ -588,7 +589,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// Draw <see cref="rays"/> in full.
         /// </summary>
-        private void DrawRays()
+        protected virtual void DrawRays()
         {
             // If we have selected a ray we only draw its ray tree.
             if (hasSelectedRay)
@@ -601,7 +602,7 @@ namespace _Project.Ray_Tracer.Scripts
                         DrawRayTree(ray);
         }
 
-        private void DrawRayTree(TreeNode<RTRay> rayTree)
+        protected virtual void DrawRayTree(TreeNode<RTRay> rayTree)
         {
             if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
                 (HideNegligibleRays && rayTree.Data.Contribution <= rayHideThreshold))
@@ -621,7 +622,7 @@ namespace _Project.Ray_Tracer.Scripts
         /// <summary>
         /// Draw a part of <see cref="rays"/> up to <see cref="distanceToDraw"/>. The part drawn grows each frame.
         /// </summary>
-        private void DrawRaysAnimated()
+        protected virtual void DrawRaysAnimated()
         {
             // Reset the animation if we are looping or if a reset was requested.
             if ((animationDone && Loop) || Reset)
@@ -679,7 +680,7 @@ namespace _Project.Ray_Tracer.Scripts
                 DrawRays();
         }
 
-        private bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
+        protected virtual bool DrawRayTreeAnimated(TreeNode<RTRay> rayTree, float distance)
         {
             if ((HideNoHitRays && rayTree.Data.Type == RTRay.RayType.NoHit) ||
                 (HideNegligibleRays && rayTree.Data.Contribution < rayHideThreshold))

@@ -41,4 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Levels/Sandbox.unity
     guid: 87a4ee9ddb599a910bbd006e2fb2701a
+  - enabled: 1
+    path: Assets/_Project/Levels/Ray Marching.unity
+    guid: b08747e1769eda048b0682a911f0ee24
   m_configObjects: {}

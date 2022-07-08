@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7714174359263163897
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3364825822907551460, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_Name
+      value: Ray Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: HideAllRays
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364825822907551462, guid: c271906e89fa0f342a70789873c17236, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3364825822907551461, guid: c271906e89fa0f342a70789873c17236, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: c271906e89fa0f342a70789873c17236, type: 3}
+--- !u!1 &5024895645546838813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3364825822907551460, guid: c271906e89fa0f342a70789873c17236, type: 3}
+  m_PrefabInstance: {fileID: 7714174359263163897}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1285401744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5024895645546838813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70d7f8e042054e6bbf209c51b58f924b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayRadius: 0.01
+  infiniteRayDrawLength: 10
+  rayPrefab: {fileID: 3475852730852656632, guid: c002e298918eb804994048849f871225, type: 3}
+  HideNoHitRays: 0
+  ShowRays: 1
+  noHitMaterial: {fileID: 2100000, guid: a98bb9836e3faab40afd0672bb18dc32, type: 2}
+  reflectMaterial: {fileID: 2100000, guid: 3d44750ec9ccdc547af676ae26be4ef1, type: 2}
+  refractMaterial: {fileID: 2100000, guid: fea3ef3a88139ae4eab5d116e182cb06, type: 2}
+  normalMaterial: {fileID: 2100000, guid: 400fade9670fe76469c19a7418a82390, type: 2}
+  shadowMaterial: {fileID: 2100000, guid: d264613b45e8db14fbaf3ad8f6a7ea34, type: 2}
+  lightMaterial: {fileID: 2100000, guid: ca1132ecbe5f8cd429367540678c7bb0, type: 2}
+  errorMaterial: {fileID: 2100000, guid: 2476b30221d1a2f4fb658070ee52c5b5, type: 2}
+  animate: 1
+  animateSequentially: 0
+  loop: 1
+  reset: 0
+  speed: 1
+  HideSpheres: 0
+  spherePrefab: {fileID: 8888792841184146488, guid: 766c2158030134c45bf720f775710f8d, type: 3}
+  sphereMaterial: {fileID: 2100000, guid: 5322f366b0f44cd479acf4bf91ec1d6e, type: 2}

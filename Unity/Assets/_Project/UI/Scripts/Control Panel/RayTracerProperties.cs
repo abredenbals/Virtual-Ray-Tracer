@@ -1,7 +1,9 @@
 using System.Collections;
 using _Project.Ray_Tracer.Scripts;
 using _Project.Scripts;
+using _Project.Ray_Tracer.Scripts.RM;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -16,80 +18,88 @@ namespace _Project.UI.Scripts.Control_Panel
     {
         private UnityRayTracer rayTracer;
         private RayManager rayManager;
-        private UIManager uiManager;
+        protected UIManager uiManager;
         private RTSceneManager rtSceneManager;
 
         [SerializeField]
-        private BoolEdit renderShadowsEdit;
+        protected BoolEdit renderShadowsEdit;
         [SerializeField]
-        private FloatEdit recursionDepthEdit;
+        protected FloatEdit recursionDepthEdit;
         [SerializeField]
-        private ColorEdit backgroundColorEdit;
+        protected ColorEdit backgroundColorEdit;
 
         [SerializeField]
         private BoolEdit showRaysEdit;
         [SerializeField]
-        private BoolEdit hideNoHitRaysEdit;
+        protected BoolEdit hideNoHitRaysEdit;
         [SerializeField]
-        private BoolEdit hideNegligibleRaysEdit;
+        protected BoolEdit hideNegligibleRaysEdit;
         [SerializeField]
-        private FloatEdit rayHideThresholdEdit;
+        protected FloatEdit rayHideThresholdEdit;
         [SerializeField]
-        private BoolEdit rayTransparencyEnabled;
+        protected BoolEdit rayTransparencyEnabled;
         [SerializeField]
-        private BoolEdit rayDynamicRadiusEnabled;
+        protected BoolEdit rayDynamicRadiusEnabled;
         [SerializeField]
-        private BoolEdit rayColorContributionEnabled;
+        protected BoolEdit rayColorContributionEnabled;
         [SerializeField]
-        private FloatEdit rayTransThresholdEdit;
+        protected FloatEdit rayTransThresholdEdit;
         [SerializeField]
-        private FloatEdit rayTransExponentEdit;
+        protected FloatEdit rayTransExponentEdit;
         [SerializeField]
-        private FloatEdit rayRadiusEdit;
+        protected FloatEdit rayRadiusEdit;
         [SerializeField]
-        private FloatEdit rayMinRadiusEdit;
+        protected FloatEdit rayMinRadiusEdit;
         [SerializeField]
-        private FloatEdit rayMaxRadiusEdit;
+        protected FloatEdit rayMaxRadiusEdit;
 
         [SerializeField]
-        private BoolEdit animateEdit;
+        protected BoolEdit animateEdit;
         [SerializeField]
-        private BoolEdit animateSequentiallyEdit;
+        protected BoolEdit animateSequentiallyEdit;
         [SerializeField]
-        private BoolEdit loopEdit;
+        protected BoolEdit loopEdit;
         [SerializeField]
-        private FloatEdit speedEdit;
+        protected FloatEdit speedEdit;
 
         [SerializeField]
-        private FloatEdit superSamplingFactorEdit;
+        protected FloatEdit superSamplingFactorEdit;
         [SerializeField]
-        private BoolEdit superSamplingVisualEdit;
+        protected BoolEdit superSamplingVisualEdit;
         [SerializeField]
-        private BoolEdit enablePointLightsEdit;
+        protected BoolEdit enablePointLightsEdit;
         [SerializeField]
-        private BoolEdit enableSpotLightsEdit;
+        protected BoolEdit enableSpotLightsEdit;
         [SerializeField]
-        private BoolEdit enableAreaLightsEdit;
+        protected BoolEdit enableAreaLightsEdit;
         [SerializeField]
-        private Button renderImageButton;
+        protected Button renderImageButton;
         [SerializeField]
-        private Button openImageButton;
+        protected Button openImageButton;
         [SerializeField]
-        private Button flyRoRTCameraButton;
+        protected Button flyRoRTCameraButton;
 
 
         /// <summary>
         /// Show the ray tracer properties for the current <see cref="UnityRayTracer"/> and <see cref="RayManager"/>.
         /// These properties can be changed via the shown UI.
         /// </summary>
-        public void Show()
-        {            
+        public virtual void Show()
+        {
             gameObject.SetActive(true);
-            rayTracer = UnityRayTracer.Get();
-            rayManager = RayManager.Get();
             uiManager = UIManager.Get();
             rtSceneManager = RTSceneManager.Get();
 
+            if (SceneManager.GetActiveScene().name == "Ray Marching")
+            {
+                rayManager = RayMarchingManager.RMGet();
+                rayTracer = UnityRayMarcher.RMGet();
+            }
+            else
+            {
+                rayManager = RayManager.Get();
+                rayTracer = UnityRayTracer.Get();
+            }
             renderShadowsEdit.IsOn = rayTracer.RenderShadows;
             enablePointLightsEdit.IsOn = rtSceneManager.Scene.EnablePointLights;
             enableSpotLightsEdit.IsOn = rtSceneManager.Scene.EnableSpotLights;
@@ -126,7 +136,7 @@ namespace _Project.UI.Scripts.Control_Panel
             gameObject.SetActive(false);
         }
 
-        private IEnumerator RunRenderImage()
+        protected virtual IEnumerator RunRenderImage()
         {
             yield return new WaitForFixedUpdate();
             yield return rayTracer.RenderImage();
@@ -134,14 +144,14 @@ namespace _Project.UI.Scripts.Control_Panel
             yield return null;
         }
 
-        private void RenderImage()
+        protected void RenderImage()
         {
             uiManager.RenderedImageWindow.Show();
             uiManager.RenderedImageWindow.SetLoading();
             StartCoroutine(RunRenderImage());
         }
 
-        private void ToggleImage()
+        protected void ToggleImage()
         {
             uiManager.RenderedImageWindow.Toggle();
         }
