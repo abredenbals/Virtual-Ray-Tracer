@@ -28,8 +28,8 @@ namespace _Project.UI.Ray_Marching
             
             renderShadowsEdit.IsOn = rayMarcher.RenderShadows;
             enablePointLightsEdit.IsOn = rtSceneManager.Scene.EnablePointLights;
-            enableSpotLightsEdit.IsOn = rtSceneManager.Scene.EnableSpotLights;
-            enableAreaLightsEdit.IsOn = rtSceneManager.Scene.EnableAreaLights;
+            enableSpotLightsEdit.IsOn = false; // not the prettiest way
+            enableAreaLightsEdit.IsOn = false;
             recursionDepthEdit.Value = rayMarcher.MaxDepth;
             backgroundColorEdit.Color = rayMarcher.BackgroundColor;
 

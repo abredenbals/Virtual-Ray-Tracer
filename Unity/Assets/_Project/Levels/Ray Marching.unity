@@ -946,19 +946,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.37955236
+      value: 0.4665512
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.12914203
+      value: -0.13318092
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.86728483
+      value: 0.840823
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.29509217
+      value: 0.24001989
       objectReference: {fileID: 0}
     - target: {fileID: 3904491717560610861, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_Layer
@@ -2612,19 +2612,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.3795584
+      value: 0.4667727
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.12944616
+      value: -0.13354212
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.86703116
+      value: 0.8405146
       objectReference: {fileID: 0}
     - target: {fileID: 3379506522100200911, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.29569593
+      value: 0.24046843
       objectReference: {fileID: 0}
     - target: {fileID: 3904491717560610861, guid: aa7cec59df0025d4896ac99db41e4250, type: 3}
       propertyPath: m_Layer
@@ -3859,6 +3859,10 @@ PrefabInstance:
       propertyPath: tooltip
       value: (De)Activates all area lights.
       objectReference: {fileID: 0}
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Enable Area Lights
@@ -3962,6 +3966,14 @@ PrefabInstance:
     - target: {fileID: 4214101846051817954, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: Content
       value: Enables/Disables area lights.
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125544742131764474, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125544742131764474, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
@@ -6682,6 +6694,10 @@ PrefabInstance:
       propertyPath: tooltip
       value: Whether the supersampling should also be visualized or not.
       objectReference: {fileID: 0}
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: SS Visualization
@@ -8979,6 +8995,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2826798568488628039, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 635
+      objectReference: {fileID: 0}
     - target: {fileID: 2852895125493967081, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -8998,6 +9018,10 @@ PrefabInstance:
     - target: {fileID: 2852895125493967081, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2987005899716247140, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 3130224831398577270, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -9535,6 +9559,14 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7433425303150785671, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7433425303150785671, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -300
+      objectReference: {fileID: 0}
     - target: {fileID: 7593597518852531620, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -9557,11 +9589,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7593597518852531620, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -281
+      value: -350
       objectReference: {fileID: 0}
     - target: {fileID: 8049757883994041652, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 296
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 8049757883994041652, guid: c7e8e831f7ef3c349b2f0c3d9c73caa7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -12486,6 +12518,10 @@ PrefabInstance:
       propertyPath: minValue
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 590595069432362183, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
+      propertyPath: interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 590595070482668862, guid: 9c7e9f84e5dea9c40a41d59563b4d99b, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -14489,6 +14525,10 @@ PrefabInstance:
       propertyPath: tooltip
       value: (De)Activates all spot lights.
       objectReference: {fileID: 0}
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Enable Spot Lights
@@ -14592,6 +14632,14 @@ PrefabInstance:
     - target: {fileID: 4214101846051817954, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: Content
       value: Enables/Disables point lights.
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125544742131764474, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: m_IsOn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125544742131764474, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
@@ -16691,6 +16739,10 @@ PrefabInstance:
       propertyPath: tooltip
       value: Whether to loop the ray animation.
       objectReference: {fileID: 0}
+    - target: {fileID: -8408966102784059295, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
+      propertyPath: interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 590595068916426999, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_text
       value: Loop Animation
@@ -16789,7 +16841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8125544742131764474, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}
       propertyPath: m_IsOn
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c187dcb58b1f9ff82b34253c7b41ce48, type: 3}

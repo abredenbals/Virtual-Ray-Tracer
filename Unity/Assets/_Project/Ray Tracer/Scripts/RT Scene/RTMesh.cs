@@ -283,9 +283,20 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
             transform.hasChanged = false;   // Do this in Update to let other scripts also check
         }
 
+        public Vector3 normalRM(ref Vector3 point, ref Vector3 collision)
+        {
+            RaycastHit hit;
+            if (shape == MeshType.Sphere)
+            {
+                return Vector3.Normalize(point - Position); //smooth normal
+            }
+            
+            Physics.Raycast(point, collision - point, out hit);
+            // should probably put the computation of the normal into another function that is not called every time to save computation time.
+            return Vector3.Normalize(hit.normal);
+        }
         
-        
-        public float DistanceToPoint(ref Vector3 point, out Vector3 collision, out Vector3 normal)
+        public float DistanceToPoint(ref Vector3 point, out Vector3 collision)
         {
             RaycastHit hit;
             switch (shape)
@@ -299,7 +310,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                     }
                     Vector3 insideObject = (point - Position).normalized * Scale.x/2.0f;
                     collision = Position + insideObject;
-                    normal = Vector3.Normalize(point - Position); //smooth normal
                     return Vector3.Distance(point, collision);
                 
                 
@@ -310,8 +320,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                         meshCollider.convex = true;
                     }
                     collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
-                    Physics.Raycast(point, collision - point, out hit);
-                    normal = Vector3.Normalize(hit.normal);
                     if (Rotation != Vector3.zero)
                     {
                         break;
@@ -333,8 +341,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
                 meshCollider.convex = true;
             }
             collision = meshCollider.ClosestPoint(point); //use ClosestPoint instead if only convex
-            Physics.Raycast(point, collision - point, out hit);
-            normal = Vector3.Normalize(hit.normal);
             return Vector3.Distance(point, collision);
         }
         

@@ -439,14 +439,13 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
                 foreach (var mesh in meshes)
                 {
                     Vector3 collision;
-                    Vector3 normalPlaceholder;
-                    float distance = mesh.DistanceToPoint(ref origin, out collision, out normalPlaceholder);
+                    float distance = mesh.DistanceToPoint(ref origin, out collision);
                     if (distance < minDist)
                     {
                         minDist = distance;
                         nearestObject = mesh;
                         nearestCollision = collision;
-                        nearestNormal = normalPlaceholder;
+                        nearestNormal = mesh.normalRM(ref origin, ref collision);
                     }
                 }
                 
