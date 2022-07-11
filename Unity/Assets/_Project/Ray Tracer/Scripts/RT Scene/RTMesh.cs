@@ -298,7 +298,6 @@ namespace _Project.Ray_Tracer.Scripts.RT_Scene
         
         public float DistanceToPoint(ref Vector3 point, out Vector3 collision)
         {
-            RaycastHit hit;
             switch (shape)
             {
                     
