@@ -7,6 +7,7 @@ using _Project.UI.Scripts;
 using _Project.UI.Scripts.Render_Image_Window;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Ray_Tracer.Scripts.Ray_Marching
 {
@@ -24,6 +25,7 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
         /// An event invoked whenever a property of this ray marcher is changed.
         /// </summary>
         public event RayMarcherChanged OnRayMarcherChanged;
+        
         
         [SerializeField]
         private float epsilonRM = 0.001f;

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Project.Ray_Tracer.Scripts.Ray_Marching.RM_ArcMesh;
 using _Project.Ray_Tracer.Scripts.Ray_Marching.RM_Sphere;
 using _Project.Ray_Tracer.Scripts.RT_Ray;
 using _Project.Ray_Tracer.Scripts.Utility;
 using UnityEngine;
+using UnityEngine.Events;
 using SphereObjectPool = _Project.Ray_Tracer.Scripts.Ray_Marching.RM_Sphere.SphereObjectPool;
 
 namespace _Project.Ray_Tracer.Scripts.Ray_Marching
@@ -34,12 +36,17 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
         private SphereObjectPool sphereObjectPool;
         private ArcMeshObjectPool arcMeshObjectPool;
         private RayObjectPool_old rayObjectPool;
+        
+        [Serializable]
+        public class RayMarchingManagerChanged : UnityEvent { }
+
+        public RayMarchingManagerChanged OnExpandigSphereChanged, OnIndicatorArcChanged;
 
         // showing/hiding Ray Marching visualizations
         [SerializeField]
         protected bool showCollisionIndicators = false;
         /// <summary>
-        /// Whether this ray manager animates the collision indicators.
+        /// Whether this ray manager animates the indicator dots.
         /// </summary>
         public bool ShowCollisionIndicators
         {
@@ -67,7 +74,7 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
         [SerializeField]
         protected bool showRMRays = false;
         /// <summary>
-        /// Whether this ray manager animates the collision indicators.
+        /// Whether this ray manager animates the indicator rays.
         /// </summary>
         public bool ShowRMRays
         {
@@ -82,7 +89,7 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
         [SerializeField]
         protected bool showRMArcs = false;
         /// <summary>
-        /// Whether this ray manager animates the collision indicators.
+        /// Whether this ray manager animates the indicator arcs.
         /// </summary>
         public bool ShowRMArcs
         {
@@ -91,13 +98,14 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
             {
                 Reset = showRMArcs != value; // Reset the animation if we changed the value.
                 showRMArcs = value;
+                OnIndicatorArcChanged?.Invoke();
             }
         }
         
         [SerializeField]
         protected bool showRMSpheres = false;
         /// <summary>
-        /// Whether this ray manager animates the collision indicators.
+        /// Whether this ray manager animates the expandig spheres.
         /// </summary>
         public bool ShowRMSpheres
         {
@@ -106,6 +114,7 @@ namespace _Project.Ray_Tracer.Scripts.Ray_Marching
             {
                 Reset = showRMSpheres != value; // Reset the animation if we changed the value.
                 showRMSpheres = value;
+                OnExpandigSphereChanged?.Invoke();
             }
         }
 

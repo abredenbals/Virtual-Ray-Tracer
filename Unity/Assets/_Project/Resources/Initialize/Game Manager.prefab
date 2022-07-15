@@ -870,7 +870,7 @@ MonoBehaviour:
         you can enable "Cheat Mode" in the settings.
       skippable: 0
       points: 0
-  - optionalTasksStart: 4
+  - optionalTasksStart: 13
     tasks:
     - identifier: 
       name: Ray Marching
@@ -934,18 +934,29 @@ MonoBehaviour:
         about the iterations:
 
         Each iteration has a starting point on the
-        ray, for the first iterations this is the point of the camera. The distances
-        to all the objects in the scene are computed from the starting point (SDFs). '
+        ray (black dots), for the first iterations this is the point of the camera. '
       skippable: 1
       points: 220
     - identifier: 
       name: One ray marching step
-      description: "The smallest distance to any object is then taken as the step
-        size. Then a step with this size si taken along the direction of the ray.
-        The rays direction is determined by the position of the camera and the pixel
-        on the \"screen\" it should pass through. From thttis new location, the next
-        iteration begins. \nAlways taking the lowest distance to any object ensures
-        that the next starting point can never be inside an object."
+      description: 'The distances to all the objects in the scene are computed from
+        the starting point (SDFs). The smallest distance to any object is then taken
+        as the step size. You can see the smallest distance of each iteration following
+        the yellow line to the blue dots. '
+      skippable: 1
+      points: 100
+    - identifier: indicatorArcChanged
+      name: Indicator Arcs
+      description: To see the connection to the next iteration go to the Ray Tracer
+        tab, find the ray marching section and turn on the Indicator Arcs!
+      skippable: 0
+      points: 500
+    - identifier: 
+      name: One ray marching step
+      description: 'Then a step with this size is taken along the direction of the
+        ray. The rays direction is determined by the position of the camera and the
+        pixel on the "screen" it should pass through. From this new location, the
+        next iteration begins. '
       skippable: 1
       points: 220
     - identifier: 
@@ -980,20 +991,25 @@ MonoBehaviour:
         and ray marching and to not overload the scene with visuals!"
       skippable: 1
       points: 302
-    - identifier: 
+    - identifier: expandingSphereChanged
       name: Ray marching visualisation
-      description: You can head to the "Ray Tracer" tab to find a ray marching specific
-        section. Here you have the option to enable and disable 4 different visualisation
-        options. The collision spheres only work with animated rays, so keep that
-        in mind.
-      skippable: 1
-      points: 371
+      description: You can head  back to the Ray Tracer tab to the ray marching specific
+        section. Turn on the Collision Spheres, they only work with animated rays.
+      skippable: 0
+      points: 500
     - identifier: 
       name: Rendered image
-      description: The render image button is available as always, but this time
-        the resulting image is ray marched. This also means that it takes a bit longer.
+      description: Scroll down. The render image button is available as always, but
+        this time the resulting image is ray marched. This also means that it takes
+        a bit longer.
       skippable: 1
-      points: 1163
+      points: 200
+    - identifier: 
+      name: Thank You!
+      description: "This is the last level, so take your time and try out a few things.
+        \n\nThank you for using the Virtual Ray Tracer!"
+      skippable: 1
+      points: 20
   Badges:
   - type: 1
     badgeName: Experimenter
